@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="suspicious_words_array">
+        <item>акция</item>
+        <item>промо</item>
+        <item>скидк</item>
+        <item>займ</item>
+        <item>такси</item>
+        <item>promo</item>
+        <item>price</item>
+        <item>taxi</item>
+        <item>optics</item>
+        <item>оптика</item>
+    </string-array>
+</resources>

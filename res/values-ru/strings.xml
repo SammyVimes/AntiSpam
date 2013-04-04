@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Анти-Спам</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="delete">Удалить</string>
+    <string name="text">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="black">Чёрный Список</string>
+    <string name="hint">Введите номер...</string>
+    <string name="toBlackList">в чёрный список?</string>
+    <string name="title_activity_add_to_spam">Подозрительное СМС</string>
+	<string name="add_text">Добавить в чёрный список?</string>
+	<string name="sender">Отправитель: </string>
+	<string name="messageText">Текст: </string>
+	<string name="yes">Да</string>
+	<string name="no">Нет</string>
+	<string name="title_activity_blacklist">Чёрный Список</string>
+	<string name="title_activity_main">СМС Анти-Спам</string>
+	<string name="lastMessages">Последние SMS</string>
+	<string name="pressMessage">Нажмите на сообщение, чтобы добавить отправителя в чёрный список</string>
+	<string name="callRejected">Отклонён звонок от номера</string>
+	<string name="parametersHeader">Настройки блокировки</string>
+	<string name="parametersText">Блокировать звонки</string>
+	<string name="blockedMessage">Заблокировано сообщение от номера</string>
+</resources>

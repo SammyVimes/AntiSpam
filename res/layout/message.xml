@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
+    
+
+<TextView
+    android:id="@+id/dateView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_below="@+id/messageView"
+    android:gravity="center_horizontal"
+    android:layout_marginRight="5dp"
+    android:text = "TEST" />
+
+<TextView
+    android:id="@+id/senderView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below = "@+id/View01"
+    android:layout_marginLeft="5dp"
+    android:text="Large Text"
+    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+<TextView
+    android:id="@+id/messageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/senderView"
+    android:layout_marginLeft="5dp"
+    android:text="TextView" />
+
+<View
+    android:id="@+id/View01"
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:background="@color/silver" />
+
+<View
+    android:id="@+id/View02"
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentBottom="true"
+    android:background="@color/silver" />
+
+</RelativeLayout>
