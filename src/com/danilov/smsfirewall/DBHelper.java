@@ -16,23 +16,73 @@ class DBHelper extends SQLiteOpenHelper {
 	Context context;
 	
     public DBHelper(Context context) {
-      // конструктор суперкласса
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
       super(context, "myDB", null, 1);
       this.context = context;
+      if(isDatabaseExist()){
+      	if(isUpgradeable()){
+      		SQLiteDatabase db = this.getWritableDatabase();	
+      		onUpgrade(db, 0, 1);
+      	}
+      }
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
       Log.d("g", "--- onCreate database ---");
-      // создаем таблицу с полями
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
       db.execSQL("create table mytable ("
           + "id integer primary key autoincrement," 
-          + "name text);");
+          + "name text," +
+          "nubmer text" +
+          "version integer);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    	ArrayList<String> numbers = new ArrayList<String>();
+	Cursor c = db.query("mytable", null, null, null, null, null, null);
+	if (c.moveToFirst()) {
+		int nameColIndex = c.getColumnIndex("name");
+		do {
+		       numbers.add(c.getString(nameColIndex));
+		}while (c.moveToNext());
+	}
+	db.close();
+	context.deleteDatabase("myDB");
+	ContentValues cv = new ContentValues();
+	SQLiteDatabase db = this.getWritableDatabase();
+	for(int i = 0; i < numbers.size(); i++){
+		cv.clear();
+		cv.put("number", numbers.get(i));
+		//TODO: HERE FIND NAMES FROM CONTACTS
+		db.insert("mytable", null, cv);
+	}
+	
+    }
+    
+    public void isDatabaseExist(){
+    	File dbFile=context.getDatabasePath(myDB);
+    	return dbFile.exists();
+    }
+    
+    public void isUpgradeable(){
+ 
+    	int curVersion;
+    	int version;
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	Cursor c = db.query("mytable", null, null, null, null, null, null);
+	if (c.moveToFirst()) {
+		int versionColIndex = c.getColumnIndex("version");
+		//TODO: CHECK THIS IN DEBUGGER!
+		do {
+		       version = c.getInt(versionColIndex);
+		}while (c.moveToNext());
+	}
+	if(version == null){
+		return true;
+	}
+	return false;
     }
     
     public void addToDb(String name){
