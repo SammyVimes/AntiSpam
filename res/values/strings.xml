@@ -23,4 +23,6 @@
 	<string name="parametersHeader">Block Settings</string>
 	<string name="parametersText">Block calls</string>
 	<string name="blockedMessage">Blocked message from</string>
+	<string name="empty">Empty!</string>
+	<string name="alreadyExisits">Already exists!</string>
 </resources>

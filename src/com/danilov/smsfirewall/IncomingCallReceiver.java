@@ -1,9 +1,7 @@
 package com.danilov.smsfirewall;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Locale;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
@@ -75,7 +72,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
-			int nameColIndex = c.getColumnIndex("name");
+			int nameColIndex = c.getColumnIndex("number");
 			do {
 		        list.add(c.getString(nameColIndex));
 		    } while (c.moveToNext());

@@ -79,24 +79,30 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	public void getContactNames(ArrayList<String> contactIds){
-		Cursor c = getBaseContext().getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-		if (c.moveToFirst()) {
-			int idColIndex = c.getColumnIndex(ContactsContract.Contacts._ID);
-			int nameColIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-			do {
-				String tmp = c.getString(idColIndex);
-				for(int i = 0; i < contactIds.size(); i++){
-					if(contactIds.get(i) != null){
-						if(contactIds.get(i).equals(tmp)){
-							String name = c.getString(nameColIndex);
-							senders.set(i, name);
-						}
-					}
+		ArrayList<String> tmp = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<String>();
+		for(int i = 0; i < senders.size(); i++){
+			boolean flag = false;
+			String sender = senders.get(i);
+			for(int j = 0; j < tmp.size(); j++){
+				if(sender.equals(tmp.get(j))){
+					flag = true;
+					break;
 				}
-			} while (c.moveToNext());
+			}
+			if(!flag){
+				tmp.add(sender);
+				names.add(BlackListActivity.findNameInList(sender, BlackListActivity.getNameFromContacts(getBaseContext())));
+			}
 		}
-		c.close();
-		
+		for(int i = 0; i < senders.size(); i++){
+			for(int j = 0; j < tmp.size(); j++){
+				if(senders.get(i).equals(tmp.get(j))){
+					senders.set(i, names.get(j));
+					break;
+				}
+			}
+		}
 	}
 	
 	public class MyReceiver extends BroadcastReceiver{
@@ -206,7 +212,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				new DBHelper(getBaseContext()).addToDb(number);
+				new DBHelper(getBaseContext()).addToDb(str, number);
 			}
 
 			@Override

@@ -33,7 +33,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
-			int nameColIndex = c.getColumnIndex("name");
+			int nameColIndex = c.getColumnIndex("number");
 			do {
 		        list.add(c.getString(nameColIndex));
 		    } while (c.moveToNext());

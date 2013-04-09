@@ -1084,11 +1084,13 @@ containing a value of this type.
         public static final int abs__shareactionprovider_share_with_application=0x7f090009;
         public static final int add=0x7f090013;
         public static final int add_text=0x7f090018;
+        public static final int alreadyExisits=0x7f090026;
         public static final int app_name=0x7f09000f;
         public static final int black=0x7f090014;
         public static final int blockedMessage=0x7f090024;
         public static final int callRejected=0x7f090021;
         public static final int delete=0x7f090011;
+        public static final int empty=0x7f090025;
         public static final int hint=0x7f090015;
         public static final int lastMessages=0x7f09001f;
         public static final int menu_settings=0x7f090010;

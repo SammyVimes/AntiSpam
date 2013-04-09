@@ -84,7 +84,7 @@ public class AddToSpamActivity extends SherlockActivity implements OnClickListen
 
 	private void addToBlackList(){
 		DBHelper dbHelper = new DBHelper(this);
-		dbHelper.addToDb(sender);
+		dbHelper.addToDb(sender, sender);
 		Toast toast = Toast.makeText(this, "Adding to black list", Toast.LENGTH_SHORT);
 		toast.show();
 	}

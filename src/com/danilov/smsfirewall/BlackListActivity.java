@@ -16,6 +16,7 @@ import a_vcard.android.syncml.pim.vcard.VCardParser;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,6 +30,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -111,7 +113,7 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
                     break;
                 }
             }
-            dbHelper.addToDb(tel);
+            dbHelper.addToDb(name, tel);
             System.out.println("Found contact: " + name);
         }
 	}
@@ -145,10 +147,50 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 	@Override
 	public void onClick(View arg0) {
 		String string = editText.getText().toString();
-		dbHelper.addToDb(string);
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+		String name = findNameInList(string, getNameFromContacts(getBaseContext()));
+		dbHelper.addToDb(name, string);
 		editText.getText().clear();
 		editText.setText("");
 		updateList();
+	}
+	
+	public static PairOfList getNameFromContacts(Context ctx){
+		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> phones = new ArrayList<String>();
+		Cursor c = ctx.getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
+		if (c.moveToFirst()) {
+			int phoneColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+			int phoneTypeColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
+			int nameColIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+			do {
+				String contactName = c.getString(nameColIndex);
+				String phone = c.getString(phoneColIndex);
+				int type = c.getInt(phoneTypeColIndex);
+				if(phone != null && type == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
+					phone = phone.replace("-", "");
+					phone = phone.replace(" ", "");
+					names.add(contactName);
+					phones.add(phone);
+				}
+			} while (c.moveToNext());
+		}
+		c.close();
+		PairOfList contacts = new PairOfList(names, phones);
+		return contacts;
+	}
+	
+	public static String findNameInList(String number, PairOfList contacts){
+		String name = number;
+		ArrayList<String> numbers = contacts.getPhones();
+		for(int i = 0; i < numbers.size(); i++){
+			if(number.equals(numbers.get(i))){
+				name = contacts.getNames().get(i);
+				break;
+			}
+		}
+		return name;
 	}
 	
 	public void updateList(){
@@ -165,7 +207,6 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		        idList.add(c.getString(idColIndex));
 		    } while (c.moveToNext());
 		}
-		replaceWithContactsNames();
 		adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, list);
 		listView.setAdapter(adapter);
@@ -173,29 +214,6 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		db.close();
 	}
 	
-	private void replaceWithContactsNames(){
-		Cursor c = getBaseContext().getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
-		if (c.moveToFirst()) {
-			int phoneColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-			int phoneTypeColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
-			int nameColIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-			do {
-				String name = c.getString(nameColIndex);
-				String phone = c.getString(phoneColIndex);
-				int type = c.getInt(phoneTypeColIndex);
-				if(phone != null && type == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
-					phone = phone.replace("-", "");
-					phone = phone.replace(" ", "");
-					for(int i = 0; i < list.size(); i++){
-						if(list.get(i).equals(phone)){
-							list.set(i, name);
-						}
-					}
-				}
-			} while (c.moveToNext());
-		}
-		c.close();
-	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle saved){
