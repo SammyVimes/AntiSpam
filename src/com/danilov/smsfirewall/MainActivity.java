@@ -75,12 +75,13 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		c.close();
 		sendersNumbersOnly = (ArrayList<String>) senders.clone();
-		getContactNames(contactIds);
+		getContactNames();
 	}
 	
-	public void getContactNames(ArrayList<String> contactIds){
+	public void getContactNames(){
 		ArrayList<String> tmp = new ArrayList<String>();
 		ArrayList<String> names = new ArrayList<String>();
+		PairOfList listOfNames = BlackListActivity.getNameFromContacts(getBaseContext());
 		for(int i = 0; i < senders.size(); i++){
 			boolean flag = false;
 			String sender = senders.get(i);
@@ -92,7 +93,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			if(!flag){
 				tmp.add(sender);
-				names.add(BlackListActivity.findNameInList(sender, BlackListActivity.getNameFromContacts(getBaseContext())));
+				names.add(BlackListActivity.findNameInList(sender, listOfNames));
 			}
 		}
 		for(int i = 0; i < senders.size(); i++){

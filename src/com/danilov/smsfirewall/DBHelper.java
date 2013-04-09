@@ -47,6 +47,7 @@ class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	    ArrayList<String> numbers = new ArrayList<String>();
+	    PairOfList listOfNames = BlackListActivity.getNameFromContacts(context);
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			int nameColIndex = c.getColumnIndex("name");
@@ -61,7 +62,7 @@ class DBHelper extends SQLiteOpenHelper {
 		for(int i = 0; i < numbers.size(); i++){
 			cv.clear();
 			cv.put("number", numbers.get(i));
-			String name = BlackListActivity.findNameInList(numbers.get(i), BlackListActivity.getNameFromContacts(context));
+			String name = BlackListActivity.findNameInList(numbers.get(i), listOfNames);
 			cv.put("name", name);
 			db.insert("mytable", null, cv);
 		}
