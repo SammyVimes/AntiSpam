@@ -42,6 +42,11 @@ class DBHelper extends SQLiteOpenHelper {
           + "id integer primary key autoincrement," 
           + "name text," +
           "number text);");
+      
+      SharedPreferences sPref = context.getSharedPreferences("preferences", context.MODE_WORLD_READABLE);
+		Editor ed = sPref.edit();
+		ed.putString(VERSION, DBVERSION);
+		ed.commit();
     }
 
     @Override
