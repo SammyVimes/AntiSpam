@@ -81,7 +81,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void getContactNames(){
 		ArrayList<String> tmp = new ArrayList<String>();
 		ArrayList<String> names = new ArrayList<String>();
-		PairOfList listOfNames = BlackListActivity.getNameFromContacts(getBaseContext());
+		myListPair listOfNames = BlackListActivity.getNameFromContacts(getBaseContext());
 		for(int i = 0; i < senders.size(); i++){
 			boolean flag = false;
 			String sender = senders.get(i);

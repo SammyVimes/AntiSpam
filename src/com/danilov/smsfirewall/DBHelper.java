@@ -52,7 +52,7 @@ class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	    ArrayList<String> numbers = new ArrayList<String>();
-	    PairOfList listOfNames = BlackListActivity.getNameFromContacts(context);
+	    myListPair listOfNames = BlackListActivity.getNameFromContacts(context);
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			int nameColIndex = c.getColumnIndex("name");

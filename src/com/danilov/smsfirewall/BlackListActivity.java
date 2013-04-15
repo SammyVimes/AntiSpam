@@ -156,7 +156,7 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		updateList();
 	}
 	
-	public static PairOfList getNameFromContacts(Context ctx){
+	public static myListPair getNameFromContacts(Context ctx){
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> phones = new ArrayList<String>();
 		Cursor c = ctx.getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
@@ -177,11 +177,11 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 			} while (c.moveToNext());
 		}
 		c.close();
-		PairOfList contacts = new PairOfList(names, phones);
+		myListPair contacts = new myListPair(names, phones);
 		return contacts;
 	}
 	
-	public static String findNameInList(String number, PairOfList contacts){
+	public static String findNameInList(String number, myListPair contacts){
 		String name = number;
 		ArrayList<String> numbers = contacts.getPhones();
 		for(int i = 0; i < numbers.size(); i++){
