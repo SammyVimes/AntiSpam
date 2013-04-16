@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -20,6 +21,9 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		AudioManager audioManager =(AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+	    int currentRingerMode = audioManager.getRingerMode();
+	    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
 	    String savedText = sPref.getString(SettingsActivity.BLOCK_PARAMETER, "");
 	    if(savedText.equals(SettingsActivity.NOT_CHECKED)){
@@ -41,6 +45,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    	TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	    	endCall(telephonyManager);
 	    }
+	    audioManager.setRingerMode(currentRingerMode);
 	}
 	
 	private void endCall(TelephonyManager telephonyManager){
@@ -53,7 +58,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    		
 	    		Log.d("MY PHONE STATE LISTENER", "ENDING CALL");
 	    		telephonyService.endCall();
-	    		telephonyService.silenceRinger();
+//	    		telephonyService.silenceRinger();
 	    	}
 	    	catch (Exception e){
 	            e.printStackTrace();
