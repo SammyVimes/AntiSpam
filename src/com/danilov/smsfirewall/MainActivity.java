@@ -15,8 +15,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.DialogFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -32,6 +32,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	ArrayList<String> sendersNumbersOnly = new ArrayList<String>();
 	ArrayList<String> senders = new ArrayList<String>();
 	ArrayList<String> smsDates = new ArrayList<String>();
+	MessagesAdapter adapter;
 	MyReceiver receiver;
 	MyDialog dialog;
 
@@ -75,7 +76,25 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 		c.close();
 		sendersNumbersOnly = (ArrayList<String>) senders.clone();
-		getContactNames();
+		startNumberResolvingTask();
+	}
+	
+	public void startNumberResolvingTask(){
+		(new AsyncTask<String, Integer, String>(){
+
+			@Override
+			protected String doInBackground(String... params) {
+				getContactNames();
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(String result){
+				 adapter.notifyDataSetChanged();
+			}
+			
+			
+		}).execute();
 	}
 	
 	public void getContactNames(){
@@ -142,7 +161,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void update(){
 		ListView listView = (ListView)findViewById(R.id.listView);
 		getMessages();
-		MessagesAdapter adapter = new MessagesAdapter(this, senders, messages, smsDates);
+		adapter = new MessagesAdapter(this, senders, messages, smsDates);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new ListListener(adapter));
 	}

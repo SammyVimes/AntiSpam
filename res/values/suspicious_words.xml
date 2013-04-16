@@ -11,6 +11,9 @@
         <item>price</item>
         <item>taxi</item>
         <item>optics</item>
-        <item>оптика</item>
+        <item>оптик</item>
+        <item>залог</item>
+        <item>салон</item>
+        <item>фитнес</item>
     </string-array>
 </resources>
