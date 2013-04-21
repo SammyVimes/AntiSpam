@@ -927,8 +927,8 @@ containing a value of this type.
         public static final int ic_launcher=0x7f02006f;
     }
     public static final class id {
-        public static final int View01=0x7f040041;
-        public static final int View02=0x7f040042;
+        public static final int View01=0x7f040042;
+        public static final int View02=0x7f040043;
         public static final int abs__action_bar=0x7f040022;
         public static final int abs__action_bar_container=0x7f040021;
         public static final int abs__action_bar_subtitle=0x7f040011;
@@ -970,16 +970,17 @@ containing a value of this type.
         public static final int abs__titleDivider=0x7f04001c;
         public static final int abs__up=0x7f04000b;
         public static final int addButton=0x7f04003b;
+        public static final int checkBox=0x7f040040;
         public static final int checkBox1=0x7f04003f;
-        public static final int dateView=0x7f040040;
+        public static final int dateView=0x7f040041;
         public static final int disableHome=0x7f040009;
         public static final int editText=0x7f04003c;
         public static final int edit_query=0x7f040027;
         public static final int homeAsUp=0x7f040006;
         public static final int listMode=0x7f040002;
         public static final int listView=0x7f04003a;
-        public static final int menu_blacklist=0x7f040044;
-        public static final int menu_settings=0x7f040043;
+        public static final int menu_blacklist=0x7f040045;
+        public static final int menu_settings=0x7f040044;
         public static final int messageView=0x7f040034;
         public static final int noButton=0x7f040036;
         public static final int normal=0x7f040001;
@@ -1028,9 +1029,10 @@ containing a value of this type.
         public static final int activity_blacklist=0x7f030018;
         public static final int activity_main=0x7f030019;
         public static final int activity_settings=0x7f03001a;
-        public static final int message=0x7f03001b;
-        public static final int sherlock_spinner_dropdown_item=0x7f03001c;
-        public static final int sherlock_spinner_item=0x7f03001d;
+        public static final int dialog_add_to_blacklist=0x7f03001b;
+        public static final int message=0x7f03001c;
+        public static final int sherlock_spinner_dropdown_item=0x7f03001d;
+        public static final int sherlock_spinner_item=0x7f03001e;
     }
     public static final class menu {
         public static final int activity_blacklist=0x7f0c0000;
@@ -1090,6 +1092,7 @@ containing a value of this type.
         public static final int blockedMessage=0x7f090024;
         public static final int callRejected=0x7f090021;
         public static final int delete=0x7f090011;
+        public static final int dialogText=0x7f090027;
         public static final int empty=0x7f090025;
         public static final int hint=0x7f090015;
         public static final int lastMessages=0x7f09001f;

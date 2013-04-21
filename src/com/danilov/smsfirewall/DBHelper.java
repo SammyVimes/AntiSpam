@@ -79,7 +79,7 @@ class DBHelper extends SQLiteOpenHelper {
     }
     
     public boolean isDatabaseExist(){
-    	File dbFile=context.getDatabasePath("myDB");
+    	File dbFile = context.getDatabasePath("myDB");
     	return dbFile.exists();
     }
     

@@ -25,4 +25,5 @@
 	<string name="blockedMessage">Blocked message from</string>
 	<string name="empty">Empty!</string>
 	<string name="alreadyExisits">Already exists!</string>
+	<string name="dialogText">and delete messages</string>
 </resources>

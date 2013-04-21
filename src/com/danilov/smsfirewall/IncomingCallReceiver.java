@@ -21,9 +21,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		AudioManager audioManager =(AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-	    int currentRingerMode = audioManager.getRingerMode();
-	    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
 	    String savedText = sPref.getString(SettingsActivity.BLOCK_PARAMETER, "");
 	    if(savedText.equals(SettingsActivity.NOT_CHECKED)){
@@ -45,7 +42,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    	TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 	    	endCall(telephonyManager);
 	    }
-	    audioManager.setRingerMode(currentRingerMode);
 	}
 	
 	private void endCall(TelephonyManager telephonyManager){
@@ -58,7 +54,6 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    		
 	    		Log.d("MY PHONE STATE LISTENER", "ENDING CALL");
 	    		telephonyService.endCall();
-//	    		telephonyService.silenceRinger();
 	    	}
 	    	catch (Exception e){
 	            e.printStackTrace();
@@ -77,9 +72,9 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
-			int nameColIndex = c.getColumnIndex("number");
+			int numberColIndex = c.getColumnIndex("number");
 			do {
-		        list.add(c.getString(nameColIndex));
+		        list.add(c.getString(numberColIndex));
 		    } while (c.moveToNext());
 		}
 		for(int i = 0; i < list.size(); i++){

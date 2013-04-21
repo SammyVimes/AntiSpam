@@ -25,4 +25,5 @@
 	<string name="blockedMessage">Заблокировано сообщение от номера</string>
 	<string name="empty">Пустая строка!</string>
 	<string name="alreadyExisits">Этот номер уже в списке!</string>
+	<string name="dialogText">и удалить сообщения</string>
 </resources>

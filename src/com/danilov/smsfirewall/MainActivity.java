@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,13 +17,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.text.style.UpdateAppearance;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.ListView;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity {
 	
@@ -152,9 +156,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	@Override
 	public void onSaveInstanceState(Bundle saved){
-		if(dialog != null){
-			dialog.dismiss();
-		}
 		super.onSaveInstanceState(saved);
 	}
 	
@@ -204,41 +205,116 @@ public class MainActivity extends SherlockFragmentActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			String str = adapter.getItem(position);
-			dialog = new MyDialog(str, sendersNumbersOnly.get(position));
+			dialog = new MyDialog();
+			dialog.setMessage(str);
+			dialog.setNumber(sendersNumbersOnly.get(position));
 			dialog.show(getSupportFragmentManager(), "dlg");
 		}
 	}
 	
-	public class MyDialog extends DialogFragment{
+	public static class MyDialog extends DialogFragment{
 		
-		private String str;
+		private static String NUMBER_KEY = "NUMBER";
+		private static String MESSAGE_KEY = "MESSAGE";
+		
+		
+		private String message;
 		private String number;
+		private View view;
+		private MainActivity activity;
+		private CheckBox checkBox;
 		
-		public MyDialog(String str, String number){
+		public MyDialog(){
 			super();
-			this.str = str;
+		}
+		
+		public void setMessage(String string){
+			this.message = string;
+		}
+		
+		public void setNumber(String number){
 			this.number = number;
 		}
 		
 		
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-		    AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
+			if(savedInstanceState != null){
+				restoreSavedInstanceState(savedInstanceState);
+			}
+		    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
 		        .setNeutralButton(R.string.add, new DialogListener())
-		        .setMessage(getResources().getString(R.string.add)+ " " + str + " " + getResources().getString(R.string.toBlackList));
-		    return adb.create();
+		        .setMessage(getResources().getString(R.string.add)+ " " + message + " " + getResources().getString(R.string.toBlackList));
+		    activity = (MainActivity) getActivity();
+		    LayoutInflater inflater = activity.getLayoutInflater();
+		    View view = inflater.inflate(R.layout.dialog_add_to_blacklist, null);
+		    builder.setView(view);
+		    this.view = view;
+		    checkBox = (CheckBox)view.findViewById(R.id.checkBox);
+		    checkBox.setChecked(true);
+		    return builder.create();
 		 }
+		
+		private void restoreSavedInstanceState(Bundle savedInstanceState){
+			message = savedInstanceState.getString(MESSAGE_KEY);
+			number = savedInstanceState.getString(NUMBER_KEY);
+		}
+		
+		
+		@Override
+		public void onSaveInstanceState(Bundle saved){
+			saved.putString(NUMBER_KEY, number);
+			saved.putString(MESSAGE_KEY, message);
+			super.onSaveInstanceState(saved);
+		}
+		
+		public void deleteSmsThread(String num){
+			final String number = new String(num);
+			(new AsyncTask<String, Integer, String>(){
+
+				@Override
+				protected String doInBackground(String... params) {
+					Uri uriSms = Uri.parse("content://sms/inbox");
+					Cursor c = MyApplication.getAppContext().getContentResolver().query(uriSms, null,null,null,null); 
+					if (c.moveToFirst()) {
+						int numberColIndex = c.getColumnIndex("address");
+						int threadColIndex = c.getColumnIndex("thread_id");
+						Integer necessaryThreadId = (Integer) null;
+						do {
+							String tmpNumber = c.getString(numberColIndex);
+					        if(tmpNumber.equals(number)){
+					        	necessaryThreadId = c.getInt(threadColIndex);
+					        	break;
+					        }
+					    } while (c.moveToNext());
+						if(necessaryThreadId != null){
+							MyApplication.getAppContext().getContentResolver().delete(Uri.parse("content://sms/conversations/" + necessaryThreadId),null,null);
+						}
+					}
+					return null;
+				}
+				
+				@Override
+				protected void onPostExecute(String result){
+					activity.update();
+				}
+				
+				
+			}).execute();
+		}
+		
 		
 		public class DialogListener implements OnClickListener, android.content.DialogInterface.OnClickListener{
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				new DBHelper(getBaseContext()).addToDb(str, number);
+				new DBHelper(MyApplication.getAppContext()).addToDb(message, number);
+				if(checkBox.isChecked()){
+					deleteSmsThread(number);
+				}
 			}
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			
