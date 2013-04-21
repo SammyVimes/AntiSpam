@@ -22,7 +22,7 @@ import android.widget.TextView;
 		public  MessagesAdapter(Context context, ArrayList<String> senders, ArrayList<String> messages, ArrayList<String> dates) {
 			this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			this.senders = senders;
-			this.messages = messages;
+			this.messages =  messages;
 			this.dates = dates;
 			size = messages.size();
 		}
@@ -37,6 +37,14 @@ import android.widget.TextView;
 		public String getItem(int position) {
 			return senders.get(position);
 		}
+		
+		public void setAll(ArrayList<String> senders, ArrayList<String> messages, ArrayList<String> dates, int size){
+			this.senders = senders;
+			this.messages =  messages;
+			this.dates = dates;
+			this.size += size;
+			notifyDataSetChanged();
+		}
 
 		@Override
 		public long getItemId(int position) {
@@ -49,7 +57,6 @@ import android.widget.TextView;
 			TextView date;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder viewholder;
@@ -66,7 +73,7 @@ import android.widget.TextView;
 			viewholder.sender.setText(senders.get(position));
 			viewholder.message.setText(messages.get(position));
 			viewholder.date.setText(dates.get(position));
-			return convertView;
+		return convertView;
 		}
 	}
 	

@@ -21,10 +21,13 @@ import android.text.style.UpdateAppearance;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -44,6 +47,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
+		pb.setVisibility(View.GONE);
 		IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 		filter.setPriority(-1000); 	//registering receiver, that will invoke update list method
 		receiver = new MyReceiver();
@@ -51,12 +56,19 @@ public class MainActivity extends SherlockFragmentActivity {
 		update();
 	}
 	
+
 	@SuppressWarnings("unchecked")
 	@SuppressLint({ "UseValueOf", "SimpleDateFormat" })
-	public void getMessages(){
-		messages.clear();
-		senders.clear();
-		smsDates.clear();
+	public int getMessages(int quantity, boolean fromBeginning){
+		if(fromBeginning){
+			messages.clear();
+			senders.clear();
+			smsDates.clear();
+		}
+		int size = messages.size();
+		ArrayList<String> messagesTmp = new ArrayList<String>();
+		ArrayList<String> sendersTmp = new ArrayList<String>();
+		ArrayList<String> smsDatesTmp = new ArrayList<String>();
 		Uri uriSms = Uri.parse("content://sms/inbox");
 		String[] queryProjection = {"address", "body", "person", "date"};
 		ArrayList<String> contactIds = new ArrayList<String>();
@@ -68,19 +80,28 @@ public class MainActivity extends SherlockFragmentActivity {
 			int contactIdsColIndex = c.getColumnIndex("person");
 			int dateColIndex = c.getColumnIndex("date");
 			do {
-		        messages.add(c.getString(bodyColIndex));
-		        senders.add(c.getString(sendersColIndex));
+				messagesTmp.add(c.getString(bodyColIndex));
+				sendersTmp.add(c.getString(sendersColIndex));
 		        contactIds.add(c.getString(contactIdsColIndex));
 		        Date date = new Date(new Long(c.getString(dateColIndex)));
 		        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, dd MMMMMMMMM");
 		        String l = sdf.format(date);
-		        smsDates.add(l);
+		        smsDatesTmp.add(l);
 		        i++;
-		    } while (c.moveToNext() && i < 30);
+		    } while (c.moveToNext() && i < quantity);
 		}
 		c.close();
+		int updatedPart = 0;
+		int tmpSize = messagesTmp.size();
+		updatedPart = tmpSize - size;
+		for(int j = 0; j < tmpSize - size; j++){
+			senders.add(sendersTmp.get(j + size));
+			messages.add(messagesTmp.get(j + size));
+			smsDates.add(smsDatesTmp.get(j + size));
+		}
 		sendersNumbersOnly = (ArrayList<String>) senders.clone();
 		startNumberResolvingTask();
+		return updatedPart;
 	}
 	
 	public void startNumberResolvingTask(){
@@ -161,11 +182,18 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	public void update(){
 		ListView listView = (ListView)findViewById(R.id.listView);
-		getMessages();
+		getMessages(30, true);
 		adapter = new MessagesAdapter(this, senders, messages, smsDates);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new ListListener(adapter));
+		listView.setOnScrollListener(new EndlessScrollListener());
 	}
+	
+	public int updateOnScrolling(int quantity){
+		return getMessages(quantity, false);
+	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -319,6 +347,50 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			
 		}
+	}
+	
+	private class EndlessScrollListener implements OnScrollListener{
+		
+		private int curTotal = 0;
+		private int updSize = 0;
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+			if(curTotal == 0){
+				curTotal = totalItemCount;
+			}
+			if(firstVisibleItem + 5 > curTotal){
+				curTotal += 10; 
+				(new AsyncTask<Integer, Integer, String>(){
+					
+					@Override
+					protected void onPreExecute(){
+						ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
+						pb.setVisibility(View.VISIBLE);
+					}
+					
+					@Override
+					protected String doInBackground(Integer... params) {
+						updSize = updateOnScrolling(params[0]);
+						return null;
+					}
+					
+					@Override
+					protected void onPostExecute(String result){
+						ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
+						pb.setVisibility(View.GONE);
+						adapter.setAll(senders, messages, smsDates, updSize);
+					}
+				}).execute(totalItemCount + 10, null, null);
+			}
+
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+		}
+		
 	}
 
 }

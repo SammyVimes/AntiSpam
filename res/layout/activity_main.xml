@@ -6,10 +6,12 @@
 
     <ListView
         android:id="@+id/listView"
-         android:layout_below="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" >
+        android:layout_above="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/view1" >
+
     </ListView>
 
     <View
@@ -38,5 +40,12 @@
         android:layout_centerHorizontal="true"
         android:text="@string/lastMessages"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

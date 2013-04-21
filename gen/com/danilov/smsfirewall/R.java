@@ -927,8 +927,8 @@ containing a value of this type.
         public static final int ic_launcher=0x7f02006f;
     }
     public static final class id {
-        public static final int View01=0x7f040042;
-        public static final int View02=0x7f040043;
+        public static final int View01=0x7f040043;
+        public static final int View02=0x7f040044;
         public static final int abs__action_bar=0x7f040022;
         public static final int abs__action_bar_container=0x7f040021;
         public static final int abs__action_bar_subtitle=0x7f040011;
@@ -970,20 +970,21 @@ containing a value of this type.
         public static final int abs__titleDivider=0x7f04001c;
         public static final int abs__up=0x7f04000b;
         public static final int addButton=0x7f04003b;
-        public static final int checkBox=0x7f040040;
-        public static final int checkBox1=0x7f04003f;
-        public static final int dateView=0x7f040041;
+        public static final int checkBox=0x7f040041;
+        public static final int checkBox1=0x7f040040;
+        public static final int dateView=0x7f040042;
         public static final int disableHome=0x7f040009;
         public static final int editText=0x7f04003c;
         public static final int edit_query=0x7f040027;
         public static final int homeAsUp=0x7f040006;
         public static final int listMode=0x7f040002;
         public static final int listView=0x7f04003a;
-        public static final int menu_blacklist=0x7f040045;
-        public static final int menu_settings=0x7f040044;
+        public static final int menu_blacklist=0x7f040046;
+        public static final int menu_settings=0x7f040045;
         public static final int messageView=0x7f040034;
         public static final int noButton=0x7f040036;
         public static final int normal=0x7f040001;
+        public static final int progressBar=0x7f04003d;
         public static final int senderView=0x7f040033;
         public static final int settingsButton=0x7f040035;
         public static final int showCustom=0x7f040008;
@@ -992,9 +993,9 @@ containing a value of this type.
         public static final int tabMode=0x7f040003;
         public static final int textView=0x7f040039;
         public static final int textView1=0x7f040038;
-        public static final int textView2=0x7f04003e;
+        public static final int textView2=0x7f04003f;
         public static final int useLogo=0x7f040004;
-        public static final int view1=0x7f04003d;
+        public static final int view1=0x7f04003e;
         public static final int wrap_content=0x7f040000;
         public static final int yesButton=0x7f040037;
     }
