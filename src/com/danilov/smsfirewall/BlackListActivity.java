@@ -251,7 +251,8 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		        .setNeutralButton(R.string.delete, new DialogListener())
 		        .setMessage(getResources().getString(R.string.text)+ " " + str + "?");
 		    return adb.create();
-		 }
+		}
+		
 		public void onDismiss(DialogInterface dialog) {
 		   super.onDismiss(dialog);
 		   updateList();

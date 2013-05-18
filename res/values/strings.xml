@@ -26,4 +26,8 @@
 	<string name="empty">Empty!</string>
 	<string name="alreadyExisits">Already exists!</string>
 	<string name="dialogText">and delete messages</string>
+	<string name="suspicious">Suspicious Words</string>
+	<string name="ok">OK</string>
+	<string name = "feature">In this version you can add your own "suspicious" words (in "Settings")!</string>
+	<string name = "newFeature">New feature!</string>
 </resources>

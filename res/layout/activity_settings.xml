@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="30dp"
         android:text="@string/parametersHeader"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -32,5 +32,14 @@
         android:layout_alignBottom="@+id/textView2"
         android:layout_alignParentRight="true"
         android:layout_marginRight="24dp" />
+
+    <Button
+        android:id="@+id/suspiciousButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="@string/suspicious" />
 
 </RelativeLayout>

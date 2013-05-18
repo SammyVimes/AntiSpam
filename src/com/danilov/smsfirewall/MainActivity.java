@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +36,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity {
 	
+	public static final String FEATURE_PARAMETER = "FEATURE_PARAMETER";
+	public static final String FEATURE_VERSION_PARAMETER = "FEATURE_VERSION_PARAMETER";
+	public static final int FEATURE_VERSION = 1;
 	ArrayList<String> messages = new ArrayList<String>();
 	ArrayList<String> sendersNumbersOnly = new ArrayList<String>();
 	ArrayList<String> senders = new ArrayList<String>();
@@ -52,13 +57,38 @@ public class MainActivity extends SherlockFragmentActivity {
 		filter.setPriority(-1000); 	//registering receiver, that will invoke update list method
 		receiver = new MyReceiver();
 		registerReceiver(receiver, filter);
-		update();
+		if(!featured()){
+			showFeature();
+		}
 	}
 	
+	private boolean featured(){
+		SharedPreferences sPref = getSharedPreferences("preferences", MODE_WORLD_READABLE);
+		boolean featured = sPref.getBoolean(FEATURE_PARAMETER, false);
+		if(!featured){
+			Editor ed = sPref.edit();
+			ed.putBoolean(FEATURE_PARAMETER, !featured);
+			ed.putInt(FEATURE_VERSION_PARAMETER, FEATURE_VERSION);
+			ed.commit();
+		}
+		return featured;
+	}
+	
+	private void showFeature(){
+		String feature = getResources().getString(R.string.feature);
+		easyDialog(feature);
+	}
+	
+	private EasyDialogFragment easyDialog(String message){
+		EasyDialogFragment dialog = new EasyDialogFragment();
+		dialog.setMessage(message);
+		dialog.show(getSupportFragmentManager(), "easyDlg");
+		return dialog;
+	}
 
 	@SuppressWarnings("unchecked")
 	@SuppressLint({ "UseValueOf", "SimpleDateFormat" })
-	public int getMessages(int quantity, boolean fromBeginning){
+	private int getMessages(int quantity, boolean fromBeginning){
 		if(fromBeginning){
 			messages.clear();
 			senders.clear();

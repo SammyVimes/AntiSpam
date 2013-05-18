@@ -25,10 +25,12 @@ public class SMSReceiver extends BroadcastReceiver {
 	private Resources resources;
 	
 	ArrayList<String> list = new ArrayList<String>();
-
+	Context context;
+	
 	@Override
 	public void onReceive(Context context, Intent arg1) {
 		resources = context.getResources();
+		this.context = context;
 		DBHelper dbHelper = new DBHelper(context);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
@@ -91,11 +93,21 @@ public class SMSReceiver extends BroadcastReceiver {
 	
 	public boolean isSpam(String message){
 		String[] suspiciousWords = resources.getStringArray(R.array.suspicious_words_array);
+		DBHelperSuspicious dbHelper = new DBHelperSuspicious(context);
+		ArrayList<String> list = dbHelper.getList();
 		boolean spam = false;
 		for(int i = 0; i < suspiciousWords.length; i++){
 			if(message.toLowerCase(Locale.getDefault()).contains(suspiciousWords[i])){
 				spam = true;
 				break;
+			}
+		}
+		if(!spam){
+			for(int i = 0; i < list.size(); i++){
+				if(message.toLowerCase(Locale.getDefault()).contains(list.get(i))){
+					spam = true;
+					break;
+				}
 			}
 		}
 		return spam;
