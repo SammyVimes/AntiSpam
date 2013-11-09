@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,9 +29,28 @@ public class SMSReceiver extends BroadcastReceiver {
 	Context context;
 	
 	@Override
-	public void onReceive(Context context, Intent arg1) {
+	public void onReceive(Context context, Intent arg1) {		
+		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
+		boolean blockUnknowChecked = sPref.getBoolean(SettingsActivity.BLOCK_UNKNOWN_PARAMETER, false);
 		resources = context.getResources();
 		this.context = context;
+		DBHelperWhitelist dbHelperWhitelist = new DBHelperWhitelist(context);
+		String sender = new String();
+		String message = new String();
+		String date = new String();
+		SmsMessage msgs[] = getMessagesFromIntent(arg1);
+		sender = msgs[0].getDisplayOriginatingAddress();
+		if (dbHelperWhitelist.contains(sender)) {
+			return;
+		}
+		if (blockUnknowChecked) {
+			if (!Util.isInContacts(context, sender)) {
+				abortBroadcast();
+				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessageUnknown), Toast.LENGTH_SHORT);
+				toast.show();
+				return;
+			}
+		}
 		DBHelper dbHelper = new DBHelper(context);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
@@ -41,10 +61,6 @@ public class SMSReceiver extends BroadcastReceiver {
 		    } while (c.moveToNext());
 		}
 		c.close();
-		String sender = new String();
-		String message = new String();
-		String date = new String();
-		SmsMessage msgs[] = getMessagesFromIntent(arg1);
 		boolean needToCheck = true;
 		for (int i = 0; i < msgs.length; i++) {
 			SmsMessage mesg = msgs[i];

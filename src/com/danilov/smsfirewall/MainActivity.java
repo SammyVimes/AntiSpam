@@ -4,6 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+import Custom.CustomDialog;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -30,22 +35,19 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity {
 	
 	public static final String FEATURE_PARAMETER = "FEATURE_PARAMETER";
 	public static final String FEATURE_VERSION_PARAMETER = "FEATURE_VERSION_PARAMETER";
-	public static final int FEATURE_VERSION = 1;
-	ArrayList<String> messages = new ArrayList<String>();
-	ArrayList<String> sendersNumbersOnly = new ArrayList<String>();
-	ArrayList<String> senders = new ArrayList<String>();
-	ArrayList<String> smsDates = new ArrayList<String>();
-	MessagesAdapter adapter;
-	MyReceiver receiver;
-	MyDialog dialog;
+	public static final int FEATURE_VERSION = 2;
+	private ArrayList<String> messages = new ArrayList<String>();
+	private ArrayList<String> sendersNumbersOnly = new ArrayList<String>();
+	private ArrayList<String> senders = new ArrayList<String>();
+	private ArrayList<String> smsDates = new ArrayList<String>();
+	private MessagesAdapter adapter;
+	private MyReceiver receiver;
+	private MyDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,10 @@ public class MainActivity extends SherlockFragmentActivity {
 	private boolean featured(){
 		SharedPreferences sPref = getSharedPreferences("preferences", MODE_WORLD_READABLE);
 		boolean featured = sPref.getBoolean(FEATURE_PARAMETER, false);
+		int featureVersion = sPref.getInt(FEATURE_VERSION_PARAMETER, 0);
+		if (FEATURE_VERSION > featureVersion) {
+			featured = false;
+		}
 		if(!featured){
 			Editor ed = sPref.edit();
 			ed.putBoolean(FEATURE_PARAMETER, !featured);
@@ -154,7 +160,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void getContactNames(){
 		ArrayList<String> tmp = new ArrayList<String>();
 		ArrayList<String> names = new ArrayList<String>();
-		myListPair listOfNames = BlackListActivity.getNameFromContacts(getBaseContext());
+		myListPair listOfNames = Util.getNameFromContacts(getBaseContext());
 		for(int i = 0; i < senders.size(); i++){
 			boolean flag = false;
 			String sender = senders.get(i);
@@ -166,7 +172,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			if(!flag){
 				tmp.add(sender);
-				names.add(BlackListActivity.findNameInList(sender, listOfNames));
+				names.add(Util.findNameInList(sender, listOfNames));
 			}
 		}
 		for(int i = 0; i < senders.size(); i++){
@@ -298,13 +304,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			if(savedInstanceState != null){
 				restoreSavedInstanceState(savedInstanceState);
 			}
-		    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-		        .setNeutralButton(R.string.add, new DialogListener())
-		        .setMessage(getResources().getString(R.string.add)+ " " + message + " " + getResources().getString(R.string.toBlackList));
+		    CustomDialog.Builder builder = new CustomDialog.Builder(getActivity())
+		        .setPositiveButton(R.string.add, new DialogListener())
+		        .setTitle(getResources().getString(R.string.add)+ " " + message + " " + getResources().getString(R.string.toBlackList));
 		    activity = (MainActivity) getActivity();
 		    LayoutInflater inflater = activity.getLayoutInflater();
 		    View view = inflater.inflate(R.layout.dialog_add_to_blacklist, null);
-		    builder.setView(view);
+		    builder.setContentView(view);
 		    this.view = view;
 		    checkBox = (CheckBox)view.findViewById(R.id.checkBox);
 		    checkBox.setChecked(true);
@@ -382,6 +388,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		private int curTotal = 0;
 		private int updSize = 0;
+		private boolean busy = false;
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem,
@@ -389,7 +396,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			if(curTotal == 0){
 				curTotal = totalItemCount;
 			}
-			if(firstVisibleItem + 5 > curTotal){
+			if(firstVisibleItem + 5 > curTotal && !busy){
 				curTotal += 10; 
 				(new AsyncTask<Integer, Integer, String>(){
 					
@@ -397,6 +404,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					protected void onPreExecute(){
 						ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
 						pb.setVisibility(View.VISIBLE);
+						busy = true;
 					}
 					
 					@Override
@@ -410,6 +418,7 @@ public class MainActivity extends SherlockFragmentActivity {
 						ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar);
 						pb.setVisibility(View.GONE);
 						adapter.setAll(senders, messages, smsDates, updSize);
+						busy = false;
 					}
 				}).execute(totalItemCount + 10, null, null);
 			}

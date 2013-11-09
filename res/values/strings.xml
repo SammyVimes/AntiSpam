@@ -21,13 +21,16 @@
 	<string name="pressMessage">Press on the message, to add sender to the black list</string>
 	<string name="callRejected">Rejected a call from</string>
 	<string name="parametersHeader">Block Settings</string>
-	<string name="parametersText">Block calls</string>
+	<string name="settings1">Block calls</string>
+	<string name="settings2">Block unknown numbers</string>
 	<string name="blockedMessage">Blocked message from</string>
+	<string name="blockedMessageUnknown">Blocked message from unknown number</string>
 	<string name="empty">Empty!</string>
 	<string name="alreadyExisits">Already exists!</string>
 	<string name="dialogText">and delete messages</string>
 	<string name="suspicious">Suspicious Words</string>
+	<string name="whiteList">White List</string>
 	<string name="ok">OK</string>
-	<string name = "feature">In this version you can add your own "suspicious" words (in "Settings")!</string>
+	<string name = "feature">Now you can add numbers to the white list (in "Settings")!</string>
 	<string name = "newFeature">New feature!</string>
 </resources>

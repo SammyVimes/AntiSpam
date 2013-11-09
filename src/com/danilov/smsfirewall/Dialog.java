@@ -1,19 +1,12 @@
 package com.danilov.smsfirewall;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,23 +14,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class Dialog extends DialogFragment implements OnClickListener, OnItemClickListener{
 	
-	ListView list;
-	EditText editText;
-	ArrayList<String> array = new ArrayList<String>();
-	ArrayList<Integer> idArray = new ArrayList<Integer>();
-	ArrayAdapter<String> adapter;
+	protected ListView list;
+	protected EditText editText;
+	protected ArrayList<String> array = new ArrayList<String>();
+	protected ArrayAdapter<String> adapter;
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
 			String title = getActivity().getResources().getString(R.string.suspicious);
 		    getDialog().setTitle(title);
-		    View v = inflater.inflate(R.layout.dialog_suspicious, null);
+		    View v = inflater.inflate(R.layout.dialog_db, null);
 		    v.findViewById(R.id.dialogButtonAdd).setOnClickListener(this);
 		    v.findViewById(R.id.dialogButtonYes).setOnClickListener(this);
 		    list = (ListView) v.findViewById(R.id.dialogListView);
@@ -48,15 +39,12 @@ public class Dialog extends DialogFragment implements OnClickListener, OnItemCli
 	
 	private void loadList(){
 		array.clear();
-		idArray.clear();
 		DBHelperSuspicious dbHelper = new DBHelperSuspicious(getActivity().getBaseContext());
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			int wordColIndex = c.getColumnIndex("word");
-			int idColIndex = c.getColumnIndex("id");
 			do {
-				idArray.add(c.getInt(idColIndex));
 				array.add(c.getString(wordColIndex));
 		    } while (c.moveToNext());
 		}
@@ -73,7 +61,8 @@ public class Dialog extends DialogFragment implements OnClickListener, OnItemCli
 			long id) {
 		String str = adapter.getItem(position);
 		MyDialog dialog = new MyDialog();
-		dialog.setMessage(str, idArray.get(position));
+		dialog.setListener(new DialogListener(str));
+		dialog.setMessage(str);
 		dialog.show(getActivity().getSupportFragmentManager(), "miniDialog");
 	}
 
@@ -97,15 +86,17 @@ public class Dialog extends DialogFragment implements OnClickListener, OnItemCli
 	public static class MyDialog extends DialogFragment{
 		
 		private static String STRING_KEY = "STRING";
-		private static String ID_KEY = "ID";
 		
+		private android.content.DialogInterface.OnClickListener listener;
 		
 		private String word;
-		private int id;
 		
-		public void setMessage(String word, int id){
+		public void setMessage(String word){
 			this.word = word;
-			this.id = id;
+		}
+		
+		public void setListener(android.content.DialogInterface.OnClickListener listener){
+			this.listener = listener;
 		}
 		
 		
@@ -114,21 +105,21 @@ public class Dialog extends DialogFragment implements OnClickListener, OnItemCli
 				restoreSavedInstanceState(savedInstanceState);
 			}
 		    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-		        .setNeutralButton(R.string.delete, new DialogListener())
+		        .setNeutralButton(R.string.delete, listener)
 		        .setMessage(getResources().getString(R.string.text)+ " " + word + "?");
 		    return builder.create();
 		 }
 		
 		private void restoreSavedInstanceState(Bundle savedInstanceState){
 			word = savedInstanceState.getString(STRING_KEY);
-			id = savedInstanceState.getInt(ID_KEY);
+			Dialog d = (Dialog) getActivity().getSupportFragmentManager().findFragmentByTag("mainDialog");
+			listener = d.getListener(word);
 		}
 		
 		
 		@Override
 		public void onSaveInstanceState(Bundle saved){
 			saved.putString(STRING_KEY, word);
-			saved.putInt(ID_KEY, id);
 			super.onSaveInstanceState(saved);
 		}
 		
@@ -137,19 +128,29 @@ public class Dialog extends DialogFragment implements OnClickListener, OnItemCli
 		   super.onDismiss(dialog);
 		}
 		
-		public class DialogListener implements android.content.DialogInterface.OnClickListener{
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				new DBHelperSuspicious(getActivity().getBaseContext()).deleteFromDb(id);
-				   Dialog d = (Dialog) getActivity().getSupportFragmentManager().findFragmentByTag("mainDialog");
-				   if(d != null){
-					   d.loadList();
-				   }
-			}
-			
-		}
+	}
 	
+	protected android.content.DialogInterface.OnClickListener getListener(final String word) {
+		return new DialogListener(word);
+	}
+	
+	public class DialogListener implements android.content.DialogInterface.OnClickListener{
+		
+		private String word;
+		
+		public DialogListener(final String word) {
+			this.word = word;
+		}
+		
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+		   new DBHelperSuspicious(getActivity().getBaseContext()).deleteFromDb(word);
+		   Dialog d = (Dialog) getActivity().getSupportFragmentManager().findFragmentByTag("mainDialog");
+		   if(d != null){
+			   d.loadList();
+		   }
+		}
+		
 	}
 }
 	

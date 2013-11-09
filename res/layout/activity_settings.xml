@@ -13,33 +13,51 @@
         android:layout_marginLeft="14dp"
         android:layout_marginTop="30dp"
         android:text="@string/parametersHeader"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <View
+        android:layout_height="2dp"
+        android:layout_width="fill_parent"
         android:layout_below="@+id/textView1"
-        android:layout_marginLeft="14dp"
-        android:text="@string/parametersText" />
+        android:background="@color/blue">
+        
+    </View>
 
-    <CheckBox
-        android:id="@+id/checkBox1"
+    <Button
+        android:id="@+id/whiteListButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="24dp" />
+        android:text="@string/whiteList" />
 
     <Button
         android:id="@+id/suspiciousButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/whiteListButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:text="@string/suspicious" />
+
+    <CheckBox
+        android:id="@+id/blockCalls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="22dp"
+        android:text="@string/settings1" />
+    
+    
+    <CheckBox
+        android:id="@+id/blockUnknown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/blockCalls"
+        android:layout_below="@+id/blockCalls"
+        android:text="@string/settings2"
+        android:layout_marginTop="22dp" />
 
 </RelativeLayout>

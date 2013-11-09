@@ -22,10 +22,11 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
-	    String savedText = sPref.getString(SettingsActivity.BLOCK_PARAMETER, "");
-	    if(savedText.equals(SettingsActivity.NOT_CHECKED)){
+		boolean blockCallsChecked = sPref.getBoolean(SettingsActivity.BLOCK_CALLS_PARAMETER, false);
+	    if (!blockCallsChecked) {
 	    	return;
 	    }
+	    boolean blockUnknowChecked = sPref.getBoolean(SettingsActivity.BLOCK_UNKNOWN_PARAMETER, false);
 		Bundle extras = intent.getExtras();
 		this.context = context;
 		boolean isSpam = false;
@@ -34,14 +35,24 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    	String state = extras.getString(TelephonyManager.EXTRA_STATE);
 	    	if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 	    		phoneNumber = extras.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+	    		if (blockUnknowChecked) {
+		    		if (!Util.isInContacts(context, phoneNumber)) {
+		    	    	putDown(phoneNumber);	
+		    	    	return;
+		    		}
+	    		}
 	    		isSpam = checkNumber(phoneNumber);
 	    	}
 	    }
 	    if(isSpam){
-	    	toaster(context.getResources().getString(R.string.callRejected) + " " + phoneNumber);
-	    	TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-	    	endCall(telephonyManager);
+	    	putDown(phoneNumber);
 	    }
+	}
+	
+	private void putDown(final String phoneNumber) {
+    	toaster(context.getResources().getString(R.string.callRejected) + " " + phoneNumber);
+    	TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+    	endCall(telephonyManager);
 	}
 	
 	private void endCall(TelephonyManager telephonyManager){

@@ -13,6 +13,7 @@ import a_vcard.android.syncml.pim.VDataBuilder;
 import a_vcard.android.syncml.pim.VNode;
 import a_vcard.android.syncml.pim.vcard.VCardException;
 import a_vcard.android.syncml.pim.vcard.VCardParser;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -149,53 +150,18 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		String string = editText.getText().toString();
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-		String name = findNameInList(string, getNameFromContacts(getBaseContext()));
+		String name = Util.findNameInList(string, Util.getNameFromContacts(getBaseContext()));
 		dbHelper.addToDb(name, string);
 		editText.getText().clear();
 		editText.setText("");
 		updateList();
 	}
 	
-	public static myListPair getNameFromContacts(Context ctx){
-		ArrayList<String> names = new ArrayList<String>();
-		ArrayList<String> phones = new ArrayList<String>();
-		Cursor c = ctx.getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
-		if (c.moveToFirst()) {
-			int phoneColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-			int phoneTypeColIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
-			int nameColIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-			do {
-				String contactName = c.getString(nameColIndex);
-				String phone = c.getString(phoneColIndex);
-				int type = c.getInt(phoneTypeColIndex);
-				if(phone != null && type == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
-					phone = phone.replace("-", "");
-					phone = phone.replace(" ", "");
-					names.add(contactName);
-					phones.add(phone);
-				}
-			} while (c.moveToNext());
-		}
-		c.close();
-		myListPair contacts = new myListPair(names, phones);
-		return contacts;
-	}
-	
-	public static String findNameInList(String number, myListPair contacts){
-		String name = number;
-		ArrayList<String> numbers = contacts.getPhones();
-		for(int i = 0; i < numbers.size(); i++){
-			if(number.equals(numbers.get(i))){
-				name = contacts.getNames().get(i);
-				break;
-			}
-		}
-		return name;
-	}
 	
 	public void updateList(){
 		list.clear();
 		idList.clear();
+		dbHelper.getWritableDatabase();
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		
@@ -234,6 +200,7 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		}
 	}
 	
+	@SuppressLint("ValidFragment")
 	public class MyDialog extends DialogFragment{
 		
 		private int id;
@@ -253,19 +220,21 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		    return adb.create();
 		}
 		
-		public void onDismiss(DialogInterface dialog) {
-		   super.onDismiss(dialog);
+		public void onDismiss(DialogInterface _dialog) {
+		   super.onDismiss(_dialog);
+		   dialog = null;
 		   updateList();
 		 }
 		
 		public class DialogListener implements OnClickListener, android.content.DialogInterface.OnClickListener{
 
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface _dialog, int which) {
 				SQLiteDatabase db = dbHelper.getWritableDatabase();
 				Log.d("11", idList.get(id));
 				db.delete("mytable", "id" + "=" + idList.get(id), null);
 				db.close();
+				dialog = null;
 			}
 
 			@Override

@@ -61,9 +61,9 @@ class DBHelperSuspicious extends SQLiteOpenHelper {
 		return list;
     }
     
-    public void deleteFromDb(int id){
+    public void deleteFromDb(final String number){
     	SQLiteDatabase db = this.getWritableDatabase();
-		db.delete("mytable", "id" + "=" + id, null);
+		db.delete("mytable", "word" + "='" + number + "'", null);
 		db.close();
     }
     

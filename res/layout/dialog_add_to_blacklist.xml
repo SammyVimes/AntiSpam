@@ -1,23 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/dialogText"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
 
     <CheckBox
         android:id="@+id/checkBox"
+        android:text="@string/dialogText"
         android:layout_width="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentLeft="true" />
     
         <View
         android:layout_width="match_parent"

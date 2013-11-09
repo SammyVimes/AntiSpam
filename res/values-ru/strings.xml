@@ -21,13 +21,16 @@
 	<string name="pressMessage">Нажмите на сообщение, чтобы добавить отправителя в чёрный список</string>
 	<string name="callRejected">Отклонён звонок от номера</string>
 	<string name="parametersHeader">Настройки блокировки</string>
-	<string name="parametersText">Блокировать звонки</string>
+	<string name="settings1">Блокировать звонки</string>
+	<string name="settings2">Блокировать неизвестные номера</string>
 	<string name="blockedMessage">Заблокировано сообщение от номера</string>
+	<string name="blockedMessageUnknown">Заблокировано сообщение от неизвестного отправителя</string>
 	<string name="empty">Пустая строка!</string>
 	<string name="alreadyExisits">Этот номер уже в списке!</string>
 	<string name="dialogText">и удалить сообщения</string>
 	<string name="suspicious">Подозрительные слова</string>
+	<string name="whiteList">Белый список</string>
     <string name="ok">ОК</string>
-    <string name = "feature">Теперь Вы можете добавлять собственные "подозрительные" слова (В "Настройках")!</string>
+    <string name = "feature">Теперь Вы можете добавлять номера в белый список (В "Настройках")!</string>
     <string name = "newFeature">Внимание!</string>
 </resources>
