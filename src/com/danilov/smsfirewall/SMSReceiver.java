@@ -60,6 +60,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		        list.add(c.getString(nameColIndex));
 		    } while (c.moveToNext());
 		}
+		db.close();
 		c.close();
 		boolean needToCheck = true;
 		for (int i = 0; i < msgs.length; i++) {

@@ -30,7 +30,11 @@
 	<string name="dialogText">и удалить сообщения</string>
 	<string name="suspicious">Подозрительные слова</string>
 	<string name="whiteList">Белый список</string>
+	<string name="expand">Раскрыть</string>
+	<string name="minimize">Уменьшить</string>
     <string name="ok">ОК</string>
-    <string name = "feature">Теперь Вы можете добавлять номера в белый список (В "Настройках")!</string>
+	<string name="rateExt">Оценить приложение</string>
+	<string name="rate">Оценить</string>
+    <string name = "feature">Теперь Вы можете добавить номера в белый список (В "Настройках") и заблокировать получение сообщений/звонков от неизвестных номеров. В эту версии мы внесли множество других мелких изменений, поэтому не забывайте писать отзывы об ошибках. Спасибо!</string>
     <string name = "newFeature">Внимание!</string>
 </resources>

@@ -35,6 +35,7 @@ class DBHelper extends SQLiteOpenHelper {
       	if (!isTableExists(db)) {
       		createTable(db);
       	}
+      	db.close();
       }
     }
 

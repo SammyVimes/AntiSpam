@@ -4,40 +4,11 @@
     android:layout_height="match_parent"
     tools:context=".AddToSpamActivity" >
 
-    <TextView
-        android:id="@+id/senderView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/messageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/senderView"
-        android:layout_marginTop="37dp"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/noButton"
-        android:text="@string/menu_settings" />
-
     <Button
         android:id="@+id/yesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/settingsButton"
+        android:layout_above="@+id/rateLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@+id/textView1"
         android:text="@string/yes" />
@@ -51,15 +22,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/add_text" />
 
-    <Button
-        android:id="@+id/noButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="@string/no" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -68,5 +30,71 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="" />
+
+    <RelativeLayout 
+        android:id="@+id/rateLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true">
+		    <Button
+		        android:id="@+id/rateButton"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/rateExt" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/noButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rateLayout"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:text="@string/no" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/senderView"
+        android:layout_above="@+id/textView"
+        android:layout_marginTop="24dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            
+            <TextView
+		        android:id="@+id/messageView"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+        		android:layout_centerHorizontal="true"
+		        android:text="@string/expand"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+            
+            <Button
+                android:id="@+id/expand"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/messageView"
+                android:layout_centerHorizontal="true"
+                android:text="@string/expand" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/senderView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

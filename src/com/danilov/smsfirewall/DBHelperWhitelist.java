@@ -28,6 +28,7 @@ public class DBHelperWhitelist extends SQLiteOpenHelper {
       if (!Util.isTableExists(db, TABLE_NAME)) {
     	  createTable(db);
       }
+      db.close();
     }
     
     

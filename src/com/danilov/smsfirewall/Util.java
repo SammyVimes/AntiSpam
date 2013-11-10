@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 public class Util {
 	
@@ -22,6 +23,12 @@ public class Util {
 	    return count > 0;
 	}
 	
+
+	
+	public static void toaster(final Context context, final String msg) {
+		Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+		toast.show();
+	}
 
 	public static myListPair getNameFromContacts(Context ctx){
 		ArrayList<String> names = new ArrayList<String>();

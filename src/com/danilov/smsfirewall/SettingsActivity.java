@@ -1,9 +1,13 @@
 package com.danilov.smsfirewall;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,6 +78,32 @@ public class SettingsActivity extends SherlockFragmentActivity {
 	    boolean blockCallsChecked = sPref.getBoolean(BLOCK_CALLS_PARAMETER, false);
 	    blockCalls.setChecked(blockCallsChecked);
 	    blockUnknown.setChecked(blockUnknowChecked);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportMenuInflater().inflate(R.menu.settings_activity, menu);
+		return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = new Intent();
+		switch(item.getItemId()){
+			case R.id.rate:
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse("market://details?id=com.danilov.smsfirewall"));
+				try {
+					this.startActivity(i);
+				} catch (Exception e) {
+					Util.toaster(this, "Market is not installed");
+					e.printStackTrace();
+				}
+				break;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 	
 }
