@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.danilov.smsfirewall"
-    android:versionCode="19"
-    android:versionName="1.03" >
+    android:versionCode="20"
+    android:versionName="1.05"
+    android:installLocation="preferExternal" >
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />

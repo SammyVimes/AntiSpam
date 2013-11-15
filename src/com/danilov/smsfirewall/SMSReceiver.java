@@ -81,13 +81,13 @@ public class SMSReceiver extends BroadcastReceiver {
 			}
 		}
 		if(needToCheck){
-			if(isSpam(message)){
+			if(isSpam(sms.getText())){
 				abortBroadcast();
 				Intent intent = new Intent(context, AddToSpamActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(MESSAGE, message);
-				intent.putExtra(SENDER, sender);
-				intent.putExtra(DATE, date);
+				intent.putExtra(MESSAGE, sms.getText());
+				intent.putExtra(SENDER, sms.getAddress());
+				intent.putExtra(DATE, Long.valueOf(sms.getDate()).toString());
 				context.startActivity(intent);
 			}
 		}
