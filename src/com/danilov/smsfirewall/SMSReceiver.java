@@ -37,7 +37,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		DBHelperWhitelist dbHelperWhitelist = new DBHelperWhitelist(context);
 		String sender = new String();
 		String message = new String();
-		String date = new String();
+		long date = 0;
 		SmsMessage msgs[] = getMessagesFromIntent(arg1);
 		sender = msgs[0].getDisplayOriginatingAddress();
 		if (dbHelperWhitelist.contains(sender)) {
@@ -46,6 +46,10 @@ public class SMSReceiver extends BroadcastReceiver {
 		if (blockUnknowChecked) {
 			if (!Util.isInContacts(context, sender)) {
 				abortBroadcast();
+				Sms sms = getSms(msgs);
+				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
+				helper.add(sms.getAddress(), sms.getText(), sms.getDate());
+				helper.close();
 				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessageUnknown), Toast.LENGTH_SHORT);
 				toast.show();
 				return;
@@ -63,19 +67,17 @@ public class SMSReceiver extends BroadcastReceiver {
 		db.close();
 		c.close();
 		boolean needToCheck = true;
-		for (int i = 0; i < msgs.length; i++) {
-			SmsMessage mesg = msgs[i];
-			date = new Long(mesg.getTimestampMillis()).toString();
-			sender = mesg.getDisplayOriginatingAddress();
-			message = message + mesg.getDisplayMessageBody();
-			for(int j = 0; j < list.size(); j++){
-				if(list.get(j).toLowerCase(Locale.getDefault()).contains(sender.toLowerCase(Locale.getDefault()))){
-					abortBroadcast();
-					Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
-					toast.show();
-					needToCheck = false;
-					break;
-				}
+		Sms sms = getSms(msgs);
+		for(int j = 0; j < list.size(); j++){
+			if(list.get(j).toLowerCase(Locale.getDefault()).contains(sms.getAddress().toLowerCase(Locale.getDefault()))){
+				abortBroadcast();
+				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
+				helper.add(sender, message, date);
+				helper.close();
+				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
+				toast.show();
+				needToCheck = false;
+				break;
 			}
 		}
 		if(needToCheck){
@@ -89,6 +91,18 @@ public class SMSReceiver extends BroadcastReceiver {
 				context.startActivity(intent);
 			}
 		}
+	}
+	
+	private Sms getSms(final SmsMessage[] parts) {
+		Sms sms = new Sms();
+		String message = "";
+		sms.setAddress(parts[0].getDisplayOriginatingAddress());
+		sms.setDate(parts[0].getTimestampMillis());
+		for (SmsMessage msg : parts) {
+			message = message + msg.getDisplayMessageBody();
+		}
+		sms.setText(message);
+		return sms;
 	}
 	
 	private SmsMessage[] getMessagesFromIntent(Intent intent) {

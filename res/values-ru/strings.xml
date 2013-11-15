@@ -35,6 +35,7 @@
     <string name="ok">ОК</string>
 	<string name="rateExt">Оценить приложение</string>
 	<string name="rate">Оценить</string>
+    <string name="spam">Спам</string>
     <string name = "feature">Теперь Вы можете добавить номера в белый список (В "Настройках") и заблокировать получение сообщений/звонков от неизвестных номеров. В эту версии мы внесли множество других мелких изменений, поэтому не забывайте писать отзывы об ошибках. Спасибо!</string>
     <string name = "newFeature">Внимание!</string>
 </resources>

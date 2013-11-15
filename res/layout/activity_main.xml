@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity" 
+    android:background="#dbe1ed">
 
     <ListView
         android:id="@+id/listView"
@@ -10,7 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/view1" >
+        android:layout_below="@+id/view1"
+        android:dividerHeight="5dp" 
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+        android:divider="@null">
 
     </ListView>
 

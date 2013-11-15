@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -217,6 +218,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	public void update(){
 		ListView listView = (ListView)findViewById(R.id.listView);
+		listView.setCacheColorHint(Color.TRANSPARENT);
 		getMessages(30, true);
 		adapter = new MessagesAdapter(this, senders, messages, smsDates);
 		listView.setAdapter(adapter);
@@ -248,6 +250,10 @@ public class MainActivity extends SherlockFragmentActivity {
 				break;
 			case R.id.menu_blacklist:
 				intent = new Intent(this, BlackListActivity.class);
+				this.startActivity(intent);
+				break;
+			case R.id.menu_spam_store:
+				intent = new Intent(this, SpamStoreActivity.class);
 				this.startActivity(intent);
 				break;
 		}

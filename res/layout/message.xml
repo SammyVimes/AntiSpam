@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/sms_background" >
     
 
 <TextView
@@ -13,6 +14,7 @@
     android:layout_below="@+id/messageView"
     android:gravity="center_horizontal"
     android:layout_marginRight="5dp"
+    android:textColor="@color/white"
     android:text = "TEST" />
 
 <TextView
@@ -20,8 +22,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
-    android:layout_below = "@+id/View01"
+    android:layout_alignParentTop="true"
     android:layout_marginLeft="5dp"
+    android:textColor="@color/white"
     android:text="Large Text"
     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -32,22 +35,7 @@
     android:layout_alignParentLeft="true"
     android:layout_below="@+id/senderView"
     android:layout_marginLeft="5dp"
+    android:textColor="@color/white"
     android:text="TextView" />
-
-<View
-    android:id="@+id/View01"
-    android:layout_width="match_parent"
-    android:layout_height="2dp"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:background="@color/silver" />
-
-<View
-    android:id="@+id/View02"
-    android:layout_width="match_parent"
-    android:layout_height="2dp"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentBottom="true"
-    android:background="@color/silver" />
 
 </RelativeLayout>

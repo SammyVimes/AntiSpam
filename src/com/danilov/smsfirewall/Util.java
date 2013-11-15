@@ -91,4 +91,8 @@ public class Util {
 		return name;
 	}
 	
+	public static void Log(final String message) {
+		System.out.println(message);
+	}
+	
 }

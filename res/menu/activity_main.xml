@@ -7,8 +7,14 @@
         android:title="@string/menu_settings"/>
     <item
         android:id="@+id/menu_blacklist"
-        android:orderInCategory="90"
+        android:orderInCategory="80"
         android:showAsAction="ifRoom"
         android:title="@string/black"/>
+    
+    <item
+        android:id="@+id/menu_spam_store"
+        android:orderInCategory="90"
+        android:showAsAction="ifRoom"
+        android:title="@string/spam"/>
 
 </menu>

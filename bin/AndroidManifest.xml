@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.danilov.smsfirewall"
     android:versionCode="19"
-    android:versionName="1.03"
-    android:installLocation="preferExternal">
+    android:versionName="1.03" >
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -71,6 +70,11 @@
         <activity
             android:name="com.danilov.smsfirewall.SettingsActivity"
             android:label="@string/menu_settings" >
+        </activity>
+        <activity
+            android:name="com.danilov.smsfirewall.SpamStoreActivity"
+            android:label="@string/title_activity_spam_store"
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
     </application>
 
