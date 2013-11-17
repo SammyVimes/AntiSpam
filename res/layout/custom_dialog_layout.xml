@@ -19,10 +19,17 @@
             android:paddingLeft="8dip"
             android:background="@color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="title"/>
+        
+        <View
+	        android:layout_height="2dp"
+	        android:layout_width="fill_parent"
+	        android:background="@color/blue">
+	    	</View>
  
     </LinearLayout>
- 
+    
     <LinearLayout 
         android:id="@+id/content"
         android:orientation="vertical"
@@ -35,7 +42,8 @@
             android:id="@+id/message"
             android:padding="5dip"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text=""/>
  
     </LinearLayout>
  

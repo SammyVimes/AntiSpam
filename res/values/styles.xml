@@ -9,7 +9,13 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:editTextStyle">@style/EditTextantispam</item>
+
+	    <item name="android:checkboxStyle">@style/CheckBoxantispam</item>
+	
+	    <item name="android:buttonStyle">@style/Buttonantispam</item>
+	
+	    <item name="android:imageButtonStyle">@style/ImageButtonantispam</item>
     </style>
  
     <style name="Dialog" parent="android:style/Theme.Dialog">

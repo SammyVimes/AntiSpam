@@ -23,6 +23,7 @@ public class AddToSpamActivity extends SherlockActivity implements OnClickListen
 	
 	private String sender;
 	private String message;
+	private String messageUntouched;
 	private String date;
 	private String subStringedMessage;
 	private boolean expandedMessage = false;
@@ -43,6 +44,7 @@ public class AddToSpamActivity extends SherlockActivity implements OnClickListen
 	public void showUI(){
 		Intent intent = getIntent();
 		message = intent.getStringExtra(SMSReceiver.MESSAGE);
+		messageUntouched = message;
 		sender = intent.getStringExtra(SMSReceiver.SENDER);
 		date = intent.getStringExtra(SMSReceiver.DATE);
 		expand = (Button) findViewById(R.id.expand);
@@ -141,7 +143,7 @@ public class AddToSpamActivity extends SherlockActivity implements OnClickListen
 	private void putMessageToInbox(){
 		ContentValues values = new ContentValues();
 		values.put("address", sender);
-		values.put("body", message);
+		values.put("body", messageUntouched);
 		values.put("date", date);
 		getContentResolver().insert(Uri.parse("content://sms/inbox"), values);
 	}

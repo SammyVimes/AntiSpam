@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        style="@style/Buttonantispam"
         android:text="@string/ok" />
 
     <Button
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/dialogEditText"
+        style="@style/Buttonantispam"
         android:text="@string/add" />
 
 </RelativeLayout>

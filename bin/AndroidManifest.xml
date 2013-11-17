@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.danilov.smsfirewall"
-    android:versionCode="20"
-    android:versionName="1.05"
+    android:versionCode="21"
+    android:versionName="1.1"
     android:installLocation="preferExternal" >
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -74,7 +74,7 @@
         </activity>
         <activity
             android:name="com.danilov.smsfirewall.SpamStoreActivity"
-            android:label="@string/title_activity_spam_store"
+            android:label="@string/spam"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
     </application>

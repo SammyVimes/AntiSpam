@@ -36,8 +36,6 @@ public class SMSReceiver extends BroadcastReceiver {
 		this.context = context;
 		DBHelperWhitelist dbHelperWhitelist = new DBHelperWhitelist(context);
 		String sender = new String();
-		String message = new String();
-		long date = 0;
 		SmsMessage msgs[] = getMessagesFromIntent(arg1);
 		sender = msgs[0].getDisplayOriginatingAddress();
 		if (dbHelperWhitelist.contains(sender)) {
@@ -72,7 +70,7 @@ public class SMSReceiver extends BroadcastReceiver {
 			if(list.get(j).toLowerCase(Locale.getDefault()).contains(sms.getAddress().toLowerCase(Locale.getDefault()))){
 				abortBroadcast();
 				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
-				helper.add(sender, message, date);
+				helper.add(sms.getAddress(), sms.getText(), sms.getDate());
 				helper.close();
 				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
 				toast.show();

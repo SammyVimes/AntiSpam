@@ -158,7 +158,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		}).execute();
 	}
 	
-	//TODO: faster method to get name by number + use hashmap, not two lists
+	//TODO: faster method to get name by number + use hashmap, not two lists + use 
+	//concurrent list with updated/notUpdated states and how much added
 	public void getContactNames(){
 		ArrayList<String> tmp = new ArrayList<String>();
 		ArrayList<String> names = new ArrayList<String>();

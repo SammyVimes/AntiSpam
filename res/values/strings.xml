@@ -38,7 +38,6 @@
     <string name="spam">Spam</string>
     <string name="feature">Now you can add numbers to white list (in "Settings") and block sms/calls from unknown numbers. Also, all spam stores for one day in special database, so you can check it. In this version we have added plenty of small changes, so don\'t forget to write a report if you encounter an error. Thanks!</string>
     <string name="newFeature">New feature!</string>
-    <string name="title_activity_spam_store">SpamStoreActivity</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
