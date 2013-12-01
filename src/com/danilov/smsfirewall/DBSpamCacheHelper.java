@@ -16,7 +16,7 @@ import android.util.Log;
 public class DBSpamCacheHelper extends SQLiteOpenHelper {
 
 
-	private static final long TIME_TO_LIVE = 86400000;
+	private static long TIME_TO_LIVE = 86400000;
 	private static final long CLEAN_PERIOD = 43200000;
 	
 	private static final String DBVERSION = "0";
@@ -35,6 +35,10 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
 	
 	public DBSpamCacheHelper(Context context) {
 		super(context, "spamdb", null, 1);
+		SharedPreferences sPref = context.getSharedPreferences("preferences", context.MODE_WORLD_READABLE);
+		int days = sPref.getInt(SettingsActivity.STORE_SPAM_DAYS, 1);
+		long millis = days * 24 * 60 * 60 * 1000;
+		TIME_TO_LIVE = millis;
 		this.context = context;
     }
 
@@ -57,11 +61,13 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
 		/*TODO: updating in future versions*/
 	}
 	
-	public void add(final String address, final String text, final long date) {
+	public void add(final String _address, final String _text, final long date) {
 		if (needToClean()) {
 			performCleanDataBase();
 		}
 		Log.i("SMS_SPAM", "ADDED");
+		String address = Util.escapeApostrophes(_address);
+		String text = Util.escapeApostrophes(_text);
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		cv.put(ADDRESS_COLUMN, address);

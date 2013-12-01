@@ -89,8 +89,9 @@ public class DBHelperWhitelist extends SQLiteOpenHelper {
 		db.close();
     }
 	
-	public boolean contains(final String number) {
+	public boolean contains(String number) {
 		SQLiteDatabase db = this.getReadableDatabase();
+		number = Util.escapeApostrophes(number);
 		Cursor cursor = db.query(TABLE_NAME, null, "number='" + number + "'", null, null, null, null);
 		if (!cursor.moveToFirst()) {
 		    cursor.close();
@@ -105,6 +106,8 @@ public class DBHelperWhitelist extends SQLiteOpenHelper {
 	    	ArrayList<String> list = new ArrayList<String>();
 	    	SQLiteDatabase db = this.getWritableDatabase();
 			ContentValues cv = new ContentValues();
+			number = Util.escapeApostrophes(number);
+			name = Util.escapeApostrophes(name);
 			if (name.equals("")) {
 				cv.put("name", number);
 			} else {

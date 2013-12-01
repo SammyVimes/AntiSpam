@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
@@ -30,7 +31,7 @@ public class Util {
 		toast.show();
 	}
 
-	public static myListPair getNameFromContacts(Context ctx){
+	public static MyListPair getNameFromContacts(Context ctx){
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> phones = new ArrayList<String>();
 		Cursor c = ctx.getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, null, null, null);
@@ -51,11 +52,15 @@ public class Util {
 			} while (c.moveToNext());
 		}
 		c.close();
-		myListPair contacts = new myListPair(names, phones);
+		MyListPair contacts = new MyListPair(names, phones);
 		return contacts;
 	}
 	
+	//rewrite
 	public static boolean isInContacts(final Context ctx, String number) {
+		if (number == null) {
+			return false;
+		}
 		boolean res = false;
 		number = number.replace("-", "");
 		number = number.replace(" ", "");
@@ -79,7 +84,60 @@ public class Util {
 		return res;
 	}
 	
-	public static String findNameInList(String number, myListPair contacts){
+	public static String getContactName(final String phoneNumber, final Context context) {  
+		if (phoneNumber == null) {
+			return phoneNumber;
+		}
+		if (phoneNumber.equals("")) {
+			return phoneNumber;
+		}
+        Uri uri;
+        String[] projection;
+        Uri phone_lookup = Uri.parse("content://com.android.contacts/phone_lookup");
+        projection = new String[] { "display_name" };
+        String contactName = phoneNumber;
+        String _phoneNumber;
+        _phoneNumber = phoneNumber.replace("-", "");
+        _phoneNumber = _phoneNumber.replace(" ", "");
+        String alternatePhoneNumber = phoneNumber;
+        if (phoneNumber.contains("+7")) {
+        	alternatePhoneNumber = alternatePhoneNumber.replace("+7", "8");
+        } else {
+        	alternatePhoneNumber = alternatePhoneNumber.replace("8", "+7");
+        }
+        uri = Uri.withAppendedPath(phone_lookup, Uri.encode(_phoneNumber)); 
+        Cursor cursor = null;
+        try {
+        	cursor = context.getContentResolver().query(uri, projection, null, null, null); 
+        } catch (Exception exception) {
+        	return contactName;
+        }
+        String tmp = null;
+        if (cursor.moveToFirst()) { 
+        	tmp = cursor.getString(0);
+        }
+        cursor.close();
+        if (tmp != null) {
+        	return tmp;
+        }
+        uri = Uri.withAppendedPath(phone_lookup, Uri.encode(_phoneNumber));
+        try {
+        	cursor = context.getContentResolver().query(uri, projection, null, null, null); 
+        } catch (Exception exception) {
+        	return contactName;
+        }
+        if (cursor.moveToFirst()) { 
+        	tmp = cursor.getString(0);
+        }
+        cursor.close();
+        if (tmp != null) {
+        	return tmp;
+        }
+        cursor = null;
+        return contactName; 
+    }
+	
+	public static String findNameInList(String number, MyListPair contacts){
 		String name = number;
 		ArrayList<String> numbers = contacts.getPhones();
 		for(int i = 0; i < numbers.size(); i++){
@@ -89,6 +147,11 @@ public class Util {
 			}
 		}
 		return name;
+	}
+	
+	public static String escapeApostrophes(final String string) {
+		String ret = string.replace("'", "''");
+		return ret;
 	}
 	
 	public static void Log(final String message) {

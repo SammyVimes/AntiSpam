@@ -2,11 +2,11 @@ package com.danilov.smsfirewall;
 
 import java.util.ArrayList;
 
-public class myListPair {
+public class MyListPair {
 	ArrayList<String> names;
 	ArrayList<String> phones;
 	
-	public myListPair(ArrayList<String> names, ArrayList<String> phones){
+	public MyListPair(ArrayList<String> names, ArrayList<String> phones){
 		this.names = names;
 		this.phones = phones;
 	}

@@ -150,7 +150,7 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		String string = editText.getText().toString();
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-		String name = Util.findNameInList(string, Util.getNameFromContacts(getBaseContext()));
+		String name = Util.getContactName(string, getApplicationContext());
 		dbHelper.addToDb(name, string);
 		editText.getText().clear();
 		editText.setText("");

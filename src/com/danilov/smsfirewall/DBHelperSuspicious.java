@@ -68,6 +68,7 @@ class DBHelperSuspicious extends SQLiteOpenHelper {
     	ArrayList<String> list = new ArrayList<String>();
     	SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
+		word = Util.escapeApostrophes(word);
 		cv.put("word", word);
 		boolean isExistInDb = false;
 		Cursor c = db.query("mytable", null, null, null, null, null, null);

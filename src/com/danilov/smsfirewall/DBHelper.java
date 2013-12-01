@@ -66,7 +66,7 @@ class DBHelper extends SQLiteOpenHelper {
       		return;
       	}
 	    ArrayList<String> numbers = new ArrayList<String>();
-	    myListPair listOfNames = Util.getNameFromContacts(context);
+	    MyListPair listOfNames = Util.getNameFromContacts(context);
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
 		if (c.moveToFirst()) {
 			int nameColIndex = c.getColumnIndex("name");
@@ -117,6 +117,8 @@ class DBHelper extends SQLiteOpenHelper {
     public void addToDb(String name, String number){
     	SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
+		name = Util.escapeApostrophes(name);
+		number = Util.escapeApostrophes(number);
 		cv.put("name", name);
 		cv.put("number", number);
 		boolean isExistInDb = false;

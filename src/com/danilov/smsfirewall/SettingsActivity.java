@@ -1,9 +1,5 @@
 package com.danilov.smsfirewall;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -13,12 +9,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class SettingsActivity extends SherlockFragmentActivity {
 	
 	public static final String BLOCK_CALLS_PARAMETER = "BLOCK_CALLS_PARAMETER";
 	public static final String BLOCK_UNKNOWN_PARAMETER = "BLOCK_UNKNOWN_PARAMETER";
+	public static final String STORE_SPAM_DAYS = "STORE_SPAM_DAYS";
 	
 	private CheckBox blockCalls;
 	private CheckBox blockUnknown;
@@ -69,6 +71,9 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		Editor ed = sPref.edit();
 		ed.putBoolean(BLOCK_CALLS_PARAMETER, blockCalls.isChecked());
 		ed.putBoolean(BLOCK_UNKNOWN_PARAMETER, blockUnknown.isChecked());
+		EditText t = (EditText) findViewById(R.id.storeSpamDays);
+		int days = Integer.valueOf(t.getText().toString());
+		ed.putInt(STORE_SPAM_DAYS, days);
 		ed.commit();
 	}
 	
@@ -76,6 +81,9 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		SharedPreferences sPref = getSharedPreferences("preferences", MODE_WORLD_READABLE);
 	    boolean blockUnknowChecked = sPref.getBoolean(BLOCK_UNKNOWN_PARAMETER, false);
 	    boolean blockCallsChecked = sPref.getBoolean(BLOCK_CALLS_PARAMETER, false);
+		int days = sPref.getInt(STORE_SPAM_DAYS, 1);
+		EditText t = (EditText) findViewById(R.id.storeSpamDays);
+		t.setText(String.valueOf(days));
 	    blockCalls.setChecked(blockCallsChecked);
 	    blockUnknown.setChecked(blockUnknowChecked);
 	}

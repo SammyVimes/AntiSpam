@@ -3,14 +3,11 @@ package com.danilov.smsfirewall;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import java.util.HashMap;
+import java.util.Map;
 
 import Custom.CustomDialog;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +32,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class MainActivity extends SherlockFragmentActivity {
@@ -110,30 +111,35 @@ public class MainActivity extends SherlockFragmentActivity {
 		ArrayList<String> contactIds = new ArrayList<String>();
 		Cursor c = this.getContentResolver().query(uriSms, queryProjection, null, null, null);
 		int i = 0;
+		if (c == null) {
+			return 0;
+		}
 		if (c.moveToFirst()) {
 			int bodyColIndex = c.getColumnIndex("body");
 			int sendersColIndex = c.getColumnIndex("address");
 			int contactIdsColIndex = c.getColumnIndex("person");
 			int dateColIndex = c.getColumnIndex("date");
 			do {
-				messagesTmp.add(c.getString(bodyColIndex));
-				sendersTmp.add(c.getString(sendersColIndex));
-		        contactIds.add(c.getString(contactIdsColIndex));
-		        Date date = new Date(new Long(c.getString(dateColIndex)));
-		        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, dd MMMMMMMMM");
-		        String l = sdf.format(date);
-		        smsDatesTmp.add(l);
+				if (i >= size) {
+					messagesTmp.add(c.getString(bodyColIndex));
+					sendersTmp.add(c.getString(sendersColIndex));
+			        contactIds.add(c.getString(contactIdsColIndex));
+			        Date date = new Date(new Long(c.getString(dateColIndex)));
+			        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, dd MMMMMMMMM");
+			        String l = sdf.format(date);
+			        smsDatesTmp.add(l);
+				}
 		        i++;
 		    } while (c.moveToNext() && i < quantity);
 		}
 		c.close();
 		int updatedPart = 0;
 		int tmpSize = messagesTmp.size();
-		updatedPart = tmpSize - size;
-		for(int j = 0; j < tmpSize - size; j++){
-			senders.add(sendersTmp.get(j + size));
-			messages.add(messagesTmp.get(j + size));
-			smsDates.add(smsDatesTmp.get(j + size));
+		updatedPart = tmpSize;
+		for(int j = 0; j < tmpSize; j++){
+			senders.add(sendersTmp.get(j));
+			messages.add(messagesTmp.get(j));
+			smsDates.add(smsDatesTmp.get(j));
 		}
 		sendersNumbersOnly = (ArrayList<String>) senders.clone();
 		startNumberResolvingTask();
@@ -158,37 +164,23 @@ public class MainActivity extends SherlockFragmentActivity {
 		}).execute();
 	}
 	
-	//TODO: faster method to get name by number + use hashmap, not two lists + use 
+	//TODO: faster method to get name by number + use 
 	//concurrent list with updated/notUpdated states and how much added
 	public void getContactNames(){
-		ArrayList<String> tmp = new ArrayList<String>();
-		ArrayList<String> names = new ArrayList<String>();
-		myListPair listOfNames = Util.getNameFromContacts(getBaseContext());
+		Map<String, String> namesPhonesMap = new HashMap<String, String>();
 		for(int i = 0; i < senders.size(); i++){
-			boolean flag = false;
 			String sender = senders.get(i);
-			for(int j = 0; j < tmp.size(); j++){
-				if(sender.equals(tmp.get(j))){
-					flag = true;
-					break;
-				}
-			}
-			if(!flag){
-				tmp.add(sender);
-				names.add(Util.findNameInList(sender, listOfNames));
+			if (!namesPhonesMap.containsKey(sender)) {
+				String name = Util.getContactName(sender, this);
+				namesPhonesMap.put(sender, name);
 			}
 		}
 		for(int i = 0; i < senders.size(); i++){
-			for(int j = 0; j < tmp.size(); j++){
-				if(senders.get(i).equals(tmp.get(j))){
-					senders.set(i, names.get(j));
-					break;
-				}
-			}
+			senders.set(i, namesPhonesMap.get(senders.get(i)));
 		}
 	}
 	
-	public class MyReceiver extends BroadcastReceiver{
+	public class MyReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {

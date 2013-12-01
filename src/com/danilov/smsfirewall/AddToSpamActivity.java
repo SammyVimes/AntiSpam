@@ -96,6 +96,9 @@ public class AddToSpamActivity extends SherlockActivity implements OnClickListen
 		switch(arg0.getId()){
 			case R.id.yesButton:
 				addToBlackList();
+				DBSpamCacheHelper helper = new DBSpamCacheHelper(this);
+				helper.add(sender, messageUntouched, Long.valueOf(date));
+				helper.close();
 				finish();
 				break;
 			case R.id.noButton:
