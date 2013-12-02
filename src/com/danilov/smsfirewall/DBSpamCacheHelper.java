@@ -26,6 +26,7 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
 	private static final String ADDRESS_COLUMN = "address";
 	private static final String MESSAGE_COLUMN = "message";
 	private static final String DATE_COLUMN = "date";
+	private static final String ID_COLUMN = "id";
 	
 	private static final String TABLE_NAME = "SPAM";
 	
@@ -88,11 +89,14 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
     		int dateColIndex = c.getColumnIndex(DATE_COLUMN);
 			int textColIndex = c.getColumnIndex(MESSAGE_COLUMN);
 			int addressColIndex = c.getColumnIndex(ADDRESS_COLUMN);
+			int idColIndex = c.getColumnIndex(ID_COLUMN);
 			do {
 				String address = c.getString(addressColIndex);
 				String text = c.getString(textColIndex);
+				int id = c.getInt(idColIndex);
 				long date = c.getLong(dateColIndex);
 				Sms sms = new Sms(address, text, date);
+				sms.setId(id);
 				list.add(sms);
 		    } while (c.moveToNext());
     	}
@@ -101,7 +105,7 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
 	}
 	
 	/*check is open*/
-	private void deleteById(final SQLiteDatabase db, final int id) {
+	public void deleteById(final SQLiteDatabase db, final int id) {
 		db.delete(TABLE_NAME, "id" + "='" + id + "'", null);
 	}
 	

@@ -1152,7 +1152,7 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f090007;
-        public static final int action_settings=0x7f090032;
+        public static final int action_settings=0x7f090035;
         public static final int add=0x7f090011;
         public static final int add_text=0x7f090016;
         public static final int alreadyExisits=0x7f090026;
@@ -1165,20 +1165,22 @@ containing a value of this type.
         public static final int dialogText=0x7f090027;
         public static final int empty=0x7f090025;
         public static final int expand=0x7f09002a;
-        public static final int feature=0x7f090030;
-        public static final int hello_world=0x7f090033;
+        public static final int feature=0x7f090033;
+        public static final int hello_world=0x7f090036;
         public static final int hint=0x7f090013;
+        public static final int in_days=0x7f090032;
         public static final int lastMessages=0x7f09001d;
         public static final int menu_settings=0x7f09000e;
         public static final int messageText=0x7f090018;
         public static final int minimize=0x7f09002b;
-        public static final int newFeature=0x7f090031;
+        public static final int newFeature=0x7f090034;
         public static final int no=0x7f09001a;
         public static final int ok=0x7f09002c;
         public static final int parametersHeader=0x7f090020;
         public static final int pressMessage=0x7f09001e;
         public static final int rate=0x7f09002e;
         public static final int rateExt=0x7f09002d;
+        public static final int restore_message=0x7f090030;
         public static final int sender=0x7f090017;
         public static final int settings1=0x7f090021;
         public static final int settings2=0x7f090022;
@@ -1189,6 +1191,7 @@ containing a value of this type.
         public static final int title_activity_blacklist=0x7f09001b;
         public static final int title_activity_main=0x7f09001c;
         public static final int toBlackList=0x7f090014;
+        public static final int ttl_spam=0x7f090031;
         public static final int whiteList=0x7f090029;
         public static final int yes=0x7f090019;
     }

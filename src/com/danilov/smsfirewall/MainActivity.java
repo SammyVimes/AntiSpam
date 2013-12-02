@@ -275,7 +275,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 	}
 	
-	public static class MyDialog extends DialogFragment{
+	public static class MyDialog extends DialogFragment {
 		
 		private static String NUMBER_KEY = "NUMBER";
 		private static String MESSAGE_KEY = "MESSAGE";

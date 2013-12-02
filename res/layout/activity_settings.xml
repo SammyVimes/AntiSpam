@@ -57,7 +57,7 @@
 		        android:layout_height="wrap_content"
 		        android:layout_below="@+id/blockUnknown"
 		        android:layout_alignLeft="@+id/blockCalls"
-		        android:text="Время хранения спама:"
+		        android:text="@string/ttl_spam"
 		        android:layout_marginTop="22dp"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -78,7 +78,7 @@
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentBottom="true"
 		        android:layout_toRightOf="@+id/storeSpamDays"
-		        android:text="(в днях)"
+		        android:text="@string/in_days"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
           
       </RelativeLayout>

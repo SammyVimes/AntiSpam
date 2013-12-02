@@ -6,6 +6,8 @@ public class Sms {
 	private String text;
 	private long date;
 	
+	private int id;
+	
 	public Sms() {
 		
 	}
@@ -14,6 +16,14 @@ public class Sms {
 		this.address = address;
 		this.text = text;
 		this.date = date;
+	}
+	
+	public void setId(final int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public String getAddress() {
