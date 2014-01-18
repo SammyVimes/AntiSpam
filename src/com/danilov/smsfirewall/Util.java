@@ -150,8 +150,7 @@ public class Util {
 	}
 	
 	public static String escapeApostrophes(final String string) {
-		String ret = string.replace("'", "''");
-		return ret;
+		return string == null ? null : string.replace("'", "''");
 	}
 	
 	public static void Log(final String message) {

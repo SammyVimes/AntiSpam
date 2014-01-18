@@ -39,9 +39,11 @@
     <string name="restore_message">Restore message?</string>
     <string name="ttl_spam">Time to store spam:</string>
     <string name="in_days">(in days)</string>
-    <string name="feature">Now you can add numbers to white list (in "Settings") and block sms/calls from unknown numbers. Also, all spam stores for one day in special database, so you can check it. In this version we have added plenty of small changes, so don\'t forget to write a report if you encounter an error. Thanks!</string>
+    <string name="feature">Version 1.41: You can now enable notifications in the settings menu</string>
     <string name="newFeature">New feature!</string>
     <string name="action_settings">Settings</string>
+    <string name="notification_text">Messages blocked today: </string>
+    <string name="show_notification">Show notification</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>

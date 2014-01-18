@@ -85,21 +85,23 @@ public class DBSpamCacheHelper extends SQLiteOpenHelper {
 		List<Sms> list = new ArrayList<Sms>();
     	SQLiteDatabase db = this.getReadableDatabase();
     	Cursor c = db.query(TABLE_NAME, null, null, null, null, null, null);
-    	if (c.moveToNext()) {
-    		int dateColIndex = c.getColumnIndex(DATE_COLUMN);
-			int textColIndex = c.getColumnIndex(MESSAGE_COLUMN);
-			int addressColIndex = c.getColumnIndex(ADDRESS_COLUMN);
-			int idColIndex = c.getColumnIndex(ID_COLUMN);
-			do {
-				String address = c.getString(addressColIndex);
-				String text = c.getString(textColIndex);
-				int id = c.getInt(idColIndex);
-				long date = c.getLong(dateColIndex);
-				Sms sms = new Sms(address, text, date);
-				sms.setId(id);
-				list.add(sms);
-		    } while (c.moveToNext());
+    	if (!c.moveToLast()) {
+    		db.close();
+    		return list;
     	}
+		int dateColIndex = c.getColumnIndex(DATE_COLUMN);
+		int textColIndex = c.getColumnIndex(MESSAGE_COLUMN);
+		int addressColIndex = c.getColumnIndex(ADDRESS_COLUMN);
+		int idColIndex = c.getColumnIndex(ID_COLUMN);
+		do {
+			String address = c.getString(addressColIndex);
+			String text = c.getString(textColIndex);
+			int id = c.getInt(idColIndex);
+			long date = c.getLong(dateColIndex);
+			Sms sms = new Sms(address, text, date);
+			sms.setId(id);
+			list.add(sms);
+	    } while (c.moveToPrevious());
     	db.close();
 		return list;
 	}

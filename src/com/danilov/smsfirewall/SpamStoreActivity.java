@@ -30,6 +30,7 @@ public class SpamStoreActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_spam_store);
 		DBSpamCacheHelper helper = new DBSpamCacheHelper(this);
 		List<Sms> list = helper.getAsList();
+		helper.close();
 		SmsAdapter adapter = new SmsAdapter(getBaseContext(), list);
 		ListView listView = (ListView) findViewById(R.id.listView);
 		MyOnItemClickListener listener = new MyOnItemClickListener();

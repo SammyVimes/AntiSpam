@@ -115,10 +115,20 @@ class DBHelper extends SQLiteOpenHelper {
     }
     
     public void addToDb(String name, String number){
+		Resources res = context.getResources();
+		String exists = res.getString(R.string.alreadyExisits);
+		String empty = res.getString(R.string.empty);
     	SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		name = Util.escapeApostrophes(name);
 		number = Util.escapeApostrophes(number);
+		if (name == null) {
+			name = number;
+		}
+		if (number == null) {
+			Toast.makeText(context, empty, Toast.LENGTH_SHORT).show();
+			return;
+		}
 		cv.put("name", name);
 		cv.put("number", number);
 		boolean isExistInDb = false;
@@ -126,9 +136,6 @@ class DBHelper extends SQLiteOpenHelper {
 		if(number.equals("")){
 			isEmpty = true;
 		}
-		Resources res = context.getResources();
-		String exists = res.getString(R.string.alreadyExisits);
-		String empty = res.getString(R.string.empty);
 		if(!isEmpty){
 			try {
 				long rowID = db.insertOrThrow("mytable", null, cv);

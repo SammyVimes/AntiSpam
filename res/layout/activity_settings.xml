@@ -71,12 +71,21 @@
 		        android:ems="10"
 		        android:inputType="number" >
 		    </EditText>
+		    
+		    <CheckBox
+		        android:id="@+id/showNotification"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/blockCalls"
+		        android:layout_below="@+id/storeSpamDays"
+		        android:text="@string/show_notification"
+		        android:layout_marginTop="22dp"  />
 
 		    <TextView
 		        android:id="@+id/textView3"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_alignParentBottom="true"
+		        android:layout_above="@+id/showNotification"
 		        android:layout_toRightOf="@+id/storeSpamDays"
 		        android:text="@string/in_days"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />

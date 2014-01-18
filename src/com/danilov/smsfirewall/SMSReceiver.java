@@ -32,6 +32,7 @@ public class SMSReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent arg1) {		
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
 		boolean blockUnknowChecked = sPref.getBoolean(SettingsActivity.BLOCK_UNKNOWN_PARAMETER, false);
+		boolean showNotificationsChecked = sPref.getBoolean(SettingsActivity.SHOW_NOTIFICATION_PARAMETER, false);
 		resources = context.getResources();
 		this.context = context;
 		DBHelperWhitelist dbHelperWhitelist = new DBHelperWhitelist(context);
@@ -68,14 +69,17 @@ public class SMSReceiver extends BroadcastReceiver {
 		Sms sms = getSms(msgs);
 		for(int j = 0; j < list.size(); j++){
 			if(list.get(j).toLowerCase(Locale.getDefault()).contains(sms.getAddress().toLowerCase(Locale.getDefault()))){
-				abortBroadcast();
+				if (showNotificationsChecked) {
+					NotificationHelper notificationHelper = NotificationHelper.getNotificationHelper(context);
+					notificationHelper.updateNotification();
+				}
 				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
 				helper.add(sms.getAddress(), sms.getText(), sms.getDate());
 				helper.close();
 				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
 				toast.show();
-				needToCheck = false;
-				break;
+				abortBroadcast();
+				return;
 			}
 		}
 		if(needToCheck){

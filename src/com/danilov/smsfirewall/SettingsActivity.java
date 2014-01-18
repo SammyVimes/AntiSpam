@@ -20,10 +20,12 @@ public class SettingsActivity extends SherlockFragmentActivity {
 	
 	public static final String BLOCK_CALLS_PARAMETER = "BLOCK_CALLS_PARAMETER";
 	public static final String BLOCK_UNKNOWN_PARAMETER = "BLOCK_UNKNOWN_PARAMETER";
+	public static final String SHOW_NOTIFICATION_PARAMETER = "SHOW_NOTIFICATION_PARAMETER";
 	public static final String STORE_SPAM_DAYS = "STORE_SPAM_DAYS";
 	
 	private CheckBox blockCalls;
 	private CheckBox blockUnknown;
+	private CheckBox showNotification;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_settings);
 		blockCalls = (CheckBox) findViewById(R.id.blockCalls);
 		blockUnknown = (CheckBox) findViewById(R.id.blockUnknown);
+		showNotification =  (CheckBox) findViewById(R.id.showNotification);
 		Button button = (Button)findViewById(R.id.suspiciousButton);
 		Button whiteListButton = (Button)findViewById(R.id.whiteListButton);
 		OnClickListener listener = new OnClickListener(){
@@ -71,8 +74,14 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		Editor ed = sPref.edit();
 		ed.putBoolean(BLOCK_CALLS_PARAMETER, blockCalls.isChecked());
 		ed.putBoolean(BLOCK_UNKNOWN_PARAMETER, blockUnknown.isChecked());
+		ed.putBoolean(SHOW_NOTIFICATION_PARAMETER, showNotification.isChecked());
 		EditText t = (EditText) findViewById(R.id.storeSpamDays);
-		int days = Integer.valueOf(t.getText().toString());
+		int days = 0;
+		try {
+			days = Integer.valueOf(t.getText().toString());
+		} catch (Exception e) {
+			Util.Log(e.getMessage());
+		}
 		ed.putInt(STORE_SPAM_DAYS, days);
 		ed.commit();
 	}
@@ -81,11 +90,13 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		SharedPreferences sPref = getSharedPreferences("preferences", MODE_WORLD_READABLE);
 	    boolean blockUnknowChecked = sPref.getBoolean(BLOCK_UNKNOWN_PARAMETER, false);
 	    boolean blockCallsChecked = sPref.getBoolean(BLOCK_CALLS_PARAMETER, false);
+	    boolean showNotificationsChecked = sPref.getBoolean(SHOW_NOTIFICATION_PARAMETER, false);
 		int days = sPref.getInt(STORE_SPAM_DAYS, 1);
 		EditText t = (EditText) findViewById(R.id.storeSpamDays);
 		t.setText(String.valueOf(days));
 	    blockCalls.setChecked(blockCallsChecked);
 	    blockUnknown.setChecked(blockUnknowChecked);
+	    showNotification.setChecked(showNotificationsChecked);
 	}
 	
 	@Override
