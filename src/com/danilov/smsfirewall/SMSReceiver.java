@@ -3,6 +3,8 @@ package com.danilov.smsfirewall;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.danilov.logger.Logger;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 @SuppressLint("UseValueOf")
 public class SMSReceiver extends BroadcastReceiver {
 	
+	private MyAndroidLogger LOGGER = new MyAndroidLogger(SMSReceiver.class);
+	
 	public static final String SENDER = "SENDER";
 	public static final String MESSAGE = "MESSAGE";
 	public static final String DATE = "DATE";
@@ -33,6 +37,9 @@ public class SMSReceiver extends BroadcastReceiver {
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
 		boolean blockUnknowChecked = sPref.getBoolean(SettingsActivity.BLOCK_UNKNOWN_PARAMETER, false);
 		boolean showNotificationsChecked = sPref.getBoolean(SettingsActivity.SHOW_NOTIFICATION_PARAMETER, false);
+		
+		LOGGER.log("SMS just came, blockUnknown=" + blockUnknowChecked);
+		
 		resources = context.getResources();
 		this.context = context;
 		DBHelperWhitelist dbHelperWhitelist = new DBHelperWhitelist(context);
@@ -40,10 +47,12 @@ public class SMSReceiver extends BroadcastReceiver {
 		SmsMessage msgs[] = getMessagesFromIntent(arg1);
 		sender = msgs[0].getDisplayOriginatingAddress();
 		if (dbHelperWhitelist.contains(sender)) {
+			LOGGER.log("Sender=" + sender + " and is in whitelest");
 			return;
 		}
 		if (blockUnknowChecked) {
 			if (!Util.isInContacts(context, sender)) {
+				LOGGER.log("Sender=" + sender + " and is not in contacts. Aborting");
 				abortBroadcast();
 				Sms sms = getSms(msgs);
 				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
@@ -57,42 +66,42 @@ public class SMSReceiver extends BroadcastReceiver {
 		DBHelper dbHelper = new DBHelper(context);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Cursor c = db.query("mytable", null, null, null, null, null, null);
+		Sms sms = getSms(msgs);
 		if (c.moveToFirst()) {
 			int nameColIndex = c.getColumnIndex("number");
 			do {
-		        list.add(c.getString(nameColIndex));
+				String number = c.getString(nameColIndex);
+				if(Util.phoneNubmersMatch(number, sms.getAddress())){
+					if (showNotificationsChecked) {
+						NotificationHelper notificationHelper = NotificationHelper.getNotificationHelper(context);
+						notificationHelper.updateNotification();
+					}
+					LOGGER.log("Sender=" + sender + " and is in black list. Aborting");
+					DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
+					helper.add(sms.getAddress(), sms.getText(), sms.getDate());
+					helper.close();
+					Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
+					toast.show();
+					abortBroadcast();
+					db.close();
+					c.close();
+					return;
+				}
 		    } while (c.moveToNext());
 		}
 		db.close();
 		c.close();
-		boolean needToCheck = true;
-		Sms sms = getSms(msgs);
-		for(int j = 0; j < list.size(); j++){
-			if(list.get(j).toLowerCase(Locale.getDefault()).contains(sms.getAddress().toLowerCase(Locale.getDefault()))){
-				if (showNotificationsChecked) {
-					NotificationHelper notificationHelper = NotificationHelper.getNotificationHelper(context);
-					notificationHelper.updateNotification();
-				}
-				DBSpamCacheHelper helper = new DBSpamCacheHelper(context);
-				helper.add(sms.getAddress(), sms.getText(), sms.getDate());
-				helper.close();
-				Toast toast = Toast.makeText(context, resources.getString(R.string.blockedMessage) + " " + sender, Toast.LENGTH_SHORT);
-				toast.show();
-				abortBroadcast();
-				return;
-			}
+		if(isSpam(sms.getText())){
+			LOGGER.log("Sender=" + sender + " and sms looks like spam");
+			abortBroadcast();
+			Intent intent = new Intent(context, AddToSpamActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(MESSAGE, sms.getText());
+			intent.putExtra(SENDER, sms.getAddress());
+			intent.putExtra(DATE, Long.valueOf(sms.getDate()).toString());
+			context.startActivity(intent);
 		}
-		if(needToCheck){
-			if(isSpam(sms.getText())){
-				abortBroadcast();
-				Intent intent = new Intent(context, AddToSpamActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(MESSAGE, sms.getText());
-				intent.putExtra(SENDER, sms.getAddress());
-				intent.putExtra(DATE, Long.valueOf(sms.getDate()).toString());
-				context.startActivity(intent);
-			}
-		}
+		LOGGER.log("Sender=" + sender + " and sms is cool");
 	}
 	
 	private Sms getSms(final SmsMessage[] parts) {

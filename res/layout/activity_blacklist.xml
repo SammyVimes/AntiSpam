@@ -42,14 +42,29 @@
         android:ems="10"
         android:hint="@string/hint" >
     </EditText>
+    
+    <View
+        android:id="@+id/centerView"
+        android:layout_centerHorizontal="true"
+        android:layout_height="0px"
+        android:layout_width="0px"/>
 
     <Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/centerView"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/editText"
-        android:text="@string/add"/>
+        android:text="@string/add" />
+
+    <Button
+        android:id="@+id/fromContactsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editText"
+        android:layout_alignRight="@+id/centerView"
+        android:layout_below="@+id/editText"
+        android:text="@string/fromContacts" />
 
 </RelativeLayout>

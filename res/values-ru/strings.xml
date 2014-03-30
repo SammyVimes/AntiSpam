@@ -6,6 +6,7 @@
     <string name="delete">Удалить</string>
     <string name="text">Удалить</string>
     <string name="add">Добавить</string>
+    <string name="fromContacts">Контакты..</string>
     <string name="black">Чёрный Список</string>
     <string name="hint">Введите номер...</string>
     <string name="toBlackList">в чёрный список?</string>
@@ -21,6 +22,7 @@
 	<string name="pressMessage">Нажмите на сообщение, чтобы добавить отправителя в чёрный список</string>
 	<string name="callRejected">Отклонён звонок от номера</string>
 	<string name="parametersHeader">Настройки блокировки</string>
+    <string name="log_header">Логирование</string>
 	<string name="settings1">Блокировать звонки</string>
 	<string name="settings2">Блокировать неизвестные номера</string>
 	<string name="blockedMessage">Заблокировано сообщение от номера</string>
@@ -39,8 +41,10 @@
     <string name="restore_message">Восстановить сообщение?</string>
     <string name="ttl_spam">Время хранения спама:</string>
     <string name="in_days">(в днях)</string>
-    <string name = "feature">Версия 1.41: Теперь вы можете включить отображение уведомлений в настройках.</string>
+    <string name = "feature">Версия 1.5: Добавлено логирование работы приложения. В случае, если что-то не работает, вы можете прислать мне логи с помощью меню Настройки -> Отправить логи</string>
     <string name = "newFeature">Внимание!</string>
     <string name="notification_text">Заблокированных сообщений сегодня: </string>
     <string name="show_notification">Показывать уведомление</string>
+    <string name="send_logs">Отправить логи</string>
+    <string name="clear_logs">Очистить логи</string>
 </resources>

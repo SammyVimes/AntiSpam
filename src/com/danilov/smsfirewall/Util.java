@@ -1,12 +1,14 @@
 package com.danilov.smsfirewall;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.text.style.ReplacementSpan;
 import android.widget.Toast;
 
 public class Util {
@@ -147,6 +149,37 @@ public class Util {
 			}
 		}
 		return name;
+	}
+	
+	public static boolean phoneNubmersEqual(final String phoneNumber1, final String phoneNumber2) {
+		if (phoneNumber1 == null || phoneNumber2 == null) {
+			return false;
+		}
+		String num1 = replaceCharsForNumbers(phoneNumber1);
+		String num2 = replaceCharsForNumbers(phoneNumber2);
+		return num1.equals(num2);
+	}
+	
+	public static boolean phoneNubmersMatch(final String phoneNumber1, final String phoneNumber2) {
+		if (phoneNumber1 == null || phoneNumber2 == null) {
+			return false;
+		}
+		String num1 = replaceCharsForNumbers(phoneNumber1);
+		String num2 = replaceCharsForNumbers(phoneNumber2);
+		boolean res = num1.contains(num2);
+		if (!res) {
+			res = num2.contains(num1);
+		}
+		return res;
+	}
+	
+	private static String replaceCharsForNumbers(final String number) {
+		String num = number;
+		num = number.toLowerCase(Locale.getDefault());
+		num = number.replace(" ", "");
+		num = number.replace("-", "");
+		num = number.replace("+7", "8");
+		return num;
 	}
 	
 	public static String escapeApostrophes(final String string) {

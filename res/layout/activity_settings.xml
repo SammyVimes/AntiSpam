@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true" >
 
     <TextView
         android:id="@+id/textView1"
@@ -32,7 +34,13 @@
 
       <RelativeLayout
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
+          android:layout_height="wrap_content" >
+        
+   	  <View 
+        android:id="@+id/centerView"
+        android:layout_height="1dp"
+        android:layout_width="1dp"
+        android:layout_centerHorizontal="true"/>
           
               <CheckBox
 		        android:id="@+id/blockCalls"
@@ -50,12 +58,21 @@
 		        android:layout_below="@+id/blockCalls"
 		        android:text="@string/settings2"
 		        android:layout_marginTop="22dp"  />
+		    
+		    <CheckBox
+		        android:id="@+id/showNotification"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/blockCalls"
+		        android:layout_below="@+id/blockUnknown"
+		        android:text="@string/show_notification"
+		        android:layout_marginTop="22dp"  />
 
 		    <TextView
 		        android:id="@+id/textView2"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_below="@+id/blockUnknown"
+		        android:layout_below="@+id/showNotification"
 		        android:layout_alignLeft="@+id/blockCalls"
 		        android:text="@string/ttl_spam"
 		        android:layout_marginTop="22dp"
@@ -71,24 +88,64 @@
 		        android:ems="10"
 		        android:inputType="number" >
 		    </EditText>
-		    
-		    <CheckBox
-		        android:id="@+id/showNotification"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignLeft="@+id/blockCalls"
-		        android:layout_below="@+id/storeSpamDays"
-		        android:text="@string/show_notification"
-		        android:layout_marginTop="22dp"  />
 
 		    <TextView
 		        android:id="@+id/textView3"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_above="@+id/showNotification"
+		        android:layout_alignBottom="@+id/storeSpamDays"
 		        android:layout_toRightOf="@+id/storeSpamDays"
 		        android:text="@string/in_days"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    
+
+		    <TextView
+		        android:id="@+id/logTitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_below="@+id/textView3"
+		        android:layout_marginLeft="14dp"
+		        android:layout_marginTop="30dp"
+		        android:text="@string/log_header"
+		        android:textAppearance="?android:attr/textAppearanceLarge" />
+		    
+		    <View
+		        android:layout_height="2dp"
+		        android:layout_width="fill_parent"
+		        android:layout_below="@+id/logTitle"
+		        android:background="@color/blue"
+		        android:id="@+id/logDelimeter"
+		        android:layout_marginBottom="15dp">
+		        
+		    </View>
+		    
+		    <TextView 
+		        android:id="@+id/logFileSizeView"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@+id/logDelimeter"
+		        android:text="0 kb"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    <Button
+		        android:id="@+id/sendLogsBtn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_alignRight="@+id/centerView"
+		        android:layout_below="@+id/logFileSizeView"
+		        android:text="@string/send_logs" />
+		    
+		    <Button
+		        android:id="@+id/clearLogsBtn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/centerView"
+		        android:layout_below="@+id/logFileSizeView"
+		        android:layout_alignParentRight="true"
+		        android:text="@string/clear_logs" />
           
       </RelativeLayout>
     </ScrollView>

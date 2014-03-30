@@ -2,13 +2,14 @@ package com.danilov.smsfirewall;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -16,17 +17,21 @@ import android.widget.Toast;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
 	
-	ArrayList<String> list = new ArrayList<String>();
+	private MyAndroidLogger LOGGER = new MyAndroidLogger(IncomingCallReceiver.class);
+	
+	private List<String> list = new ArrayList<String>();
 	Context context;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		SharedPreferences sPref = context.getSharedPreferences("preferences", Context.MODE_WORLD_READABLE);
 		boolean blockCallsChecked = sPref.getBoolean(SettingsActivity.BLOCK_CALLS_PARAMETER, false);
+		LOGGER.log("Block calls is " + blockCallsChecked);
 	    if (!blockCallsChecked) {
 	    	return;
 	    }
 	    boolean blockUnknowChecked = sPref.getBoolean(SettingsActivity.BLOCK_UNKNOWN_PARAMETER, false);
+		LOGGER.log("Block unknown is " + blockUnknowChecked);
 		Bundle extras = intent.getExtras();
 		this.context = context;
 		boolean isSpam = false;
@@ -37,6 +42,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    		phoneNumber = extras.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
 	    		if (blockUnknowChecked) {
 		    		if (!Util.isInContacts(context, phoneNumber)) {
+		    			LOGGER.log("Phone number is " + phoneNumber + " and is not in contatcs. Aborting");
 		    	    	putDown(phoneNumber);	
 		    	    	return;
 		    		}
@@ -44,6 +50,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
 	    		isSpam = checkNumber(phoneNumber);
 	    	}
 	    }
+		LOGGER.log("Is spam = " + isSpam + ", number is " + phoneNumber);
 	    if(isSpam){
 	    	putDown(phoneNumber);
 	    }

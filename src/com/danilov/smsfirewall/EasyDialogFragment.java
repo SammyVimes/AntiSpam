@@ -38,7 +38,7 @@ public class EasyDialogFragment extends DialogFragment {
 		return super.getDialog();
 	}
 	
-	private void restoreSavedInstanceState(Bundle savedInstanceState){
+	protected void restoreSavedInstanceState(Bundle savedInstanceState){
 		message = savedInstanceState.getString(MESSAGE);
 	}
 	

@@ -1,5 +1,9 @@
 package com.danilov.smsfirewall;
 
+import java.io.File;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -36,6 +42,8 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		showNotification =  (CheckBox) findViewById(R.id.showNotification);
 		Button button = (Button)findViewById(R.id.suspiciousButton);
 		Button whiteListButton = (Button)findViewById(R.id.whiteListButton);
+		Button sendLogsButton = (Button) findViewById(R.id.sendLogsBtn);
+		Button clearLogsButton = (Button) findViewById(R.id.clearLogsBtn);
 		OnClickListener listener = new OnClickListener(){
 
 			@Override
@@ -49,12 +57,33 @@ public class SettingsActivity extends SherlockFragmentActivity {
 						WhiteListDialog wDlg = new WhiteListDialog();
 						wDlg.show(getSupportFragmentManager(), "mainDialog");
 						break;
+					case R.id.sendLogsBtn:
+						sendLogsEmail();
+						break;
+					case R.id.clearLogsBtn:
+						DeleteLogsDialog d = new DeleteLogsDialog();
+						d.show(getSupportFragmentManager(), "DeleteLogsDialog");
+						break;
 				}
 			}
 			
 		};
 		button.setOnClickListener(listener);
 		whiteListButton.setOnClickListener(listener);
+		sendLogsButton.setOnClickListener(listener);
+		clearLogsButton.setOnClickListener(listener);
+		
+		refreshLogsState();
+	}
+	
+	private void refreshLogsState() {
+		TextView logView = (TextView) findViewById(R.id.logFileSizeView);
+		String filePath = MyAndroidLogger.PATH + MyAndroidLogger.fileName;
+		File f = new File(filePath);
+		boolean fileExists = f.exists();
+		long size = f.length();
+		String logText = fileExists ? "Size: " + (size / 1024) + " kb" : "File not exists";  
+		logView.setText(logText);
 	}
 	
 	@Override
@@ -69,6 +98,27 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		super.onResume();
 	}
 	
+	private void sendLogsEmail() {
+		String filePath = MyAndroidLogger.PATH + MyAndroidLogger.fileName;
+		File f = new File(filePath);
+		boolean fileExists = f.exists();
+		if (!fileExists) {
+		    Toast.makeText(this, "Log file not found", Toast.LENGTH_LONG).show();
+			return;
+		}
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"senya.danilov@gmail.com"});
+		i.putExtra(Intent.EXTRA_SUBJECT, "АнтиСпам - логи");
+		i.putExtra(Intent.EXTRA_TEXT   , "Привет. Вот логи.");
+		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+		i.setType("message/rfc822");
+		try {
+		    startActivity(Intent.createChooser(i, "Send mail..."));
+		} catch (android.content.ActivityNotFoundException ex) {
+		    Toast.makeText(this, "There are no email clients installed. Can't send logs:(", Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	private void saveSettings(){
 		SharedPreferences sPref = getSharedPreferences("preferences", MODE_WORLD_READABLE);
 		Editor ed = sPref.edit();
@@ -79,6 +129,9 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		int days = 0;
 		try {
 			days = Integer.valueOf(t.getText().toString());
+			if (days < 0) {
+				days = 1;
+			}
 		} catch (Exception e) {
 			Util.Log(e.getMessage());
 		}
@@ -123,6 +176,40 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public static class DeleteLogsDialog extends EasyDialogFragment {
+		
+		@Override
+		public android.app.Dialog onCreateDialog(Bundle savedInstanceState) {
+			if(savedInstanceState != null){
+				restoreSavedInstanceState(savedInstanceState);
+			}
+		    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+		        .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						String filePath = MyAndroidLogger.PATH + MyAndroidLogger.fileName;
+						File f = new File(filePath);
+						boolean fileExists = f.exists();
+						if (fileExists) {
+							f.delete();
+						}
+						((SettingsActivity) getActivity()).refreshLogsState();
+					}
+		        	
+		        }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						((SettingsActivity) getActivity()).refreshLogsState();
+						dismiss();
+					}
+				})
+		        .setMessage("Delete logs?").setTitle("Logs deleting");
+		    return builder.create();
+		}
+		
 	}
 	
 }

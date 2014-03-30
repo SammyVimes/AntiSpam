@@ -42,7 +42,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	public static final String FEATURE_PARAMETER = "FEATURE_PARAMETER";
 	public static final String FEATURE_VERSION_PARAMETER = "FEATURE_VERSION_PARAMETER";
-	public static final int FEATURE_VERSION = 3;
+	public static final int FEATURE_VERSION = 5;
 	private ArrayList<String> messages = new ArrayList<String>();
 	private ArrayList<String> sendersNumbersOnly = new ArrayList<String>();
 	private ArrayList<String> senders = new ArrayList<String>();

@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -46,8 +48,8 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 	private ListView listView;
 	public MyDialog dialog;
 	private ArrayAdapter<String> adapter;
-	private ArrayList<String> list = new ArrayList<String>();
-	private ArrayList<String> idList = new ArrayList<String>();
+	private List<String> list = new LinkedList<String>();
+	private List<String> idList = new LinkedList<String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,10 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		setContentView(R.layout.activity_blacklist);
 		editText = (EditText) findViewById(R.id.editText);
 		Button addButton = (Button) findViewById(R.id.addButton);
+		Button fromContactsButton = (Button) findViewById(R.id.fromContactsButton);
 		listView = (ListView)findViewById(R.id.listView);
 		addButton.setOnClickListener(this);
+		fromContactsButton.setOnClickListener(this);
 		dbHelper = new DBHelper(this);
 		listView.setOnItemClickListener(new ListListener());
 		updateList();
@@ -147,11 +151,65 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 
 	@Override
 	public void onClick(View arg0) {
-		String string = editText.getText().toString();
+		switch(arg0.getId()) {
+		case R.id.addButton:
+			onAddButtonClicked();
+			break;
+		case R.id.fromContactsButton:
+			onFromContactsClicked();
+			break;
+		}
+	}
+	
+	static final int PICK_CONTACT = 1;
+	
+	public void onFromContactsClicked() {
+		Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		startActivityForResult(intent, PICK_CONTACT);	
+	}
+	
+	@Override
+	@SuppressWarnings("deprecation")
+	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+		 super.onActivityResult(reqCode, resultCode, data);
+		 switch (reqCode) {
+		 case (PICK_CONTACT) :
+		   if (resultCode == SherlockFragmentActivity.RESULT_OK) {
+		     Uri contactData = data.getData();
+		     Cursor c =  managedQuery(contactData, null, null, null, null);
+		     if (c.moveToFirst()) {
+		         String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+		         String hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+		         String cNumber = null;
+	             if (hasPhone.equalsIgnoreCase("1")) {
+	        	    Cursor phones = getContentResolver().query( 
+	                       ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, 
+	                       ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id, 
+	                       null, null);
+	        	    phones.moveToFirst();
+	                cNumber = phones.getString(phones.getColumnIndex("data1"));
+	                System.out.println("number is:" + cNumber);
+	             } 
+		         String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+		         if (cNumber != null) {
+			         addToBlackList(cNumber, name);
+		         }
+		     }
+		   }
+		   break;
+		 }
+    }
+	
+	public void onAddButtonClicked() {
+		String phone = editText.getText().toString();
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-		String name = Util.getContactName(string, getApplicationContext());
-		dbHelper.addToDb(name, string);
+		String name = Util.getContactName(phone, getApplicationContext());
+		addToBlackList(phone, name);
+	}
+	
+	public void addToBlackList(final String phone, final String name) {
+		dbHelper.addToDb(name, phone);
 		editText.getText().clear();
 		editText.setText("");
 		updateList();
@@ -168,11 +226,14 @@ public class BlackListActivity extends SherlockFragmentActivity implements OnCli
 		if (c.moveToFirst()) {
 			Integer idColIndex = c.getColumnIndex("id");
 			int nameColIndex = c.getColumnIndex("name");
+			int nubmerColIndex = c.getColumnIndex("number");
 			do {
-		        list.add(c.getString(nameColIndex));
+		        list.add(c.getString(nameColIndex) + " (" + c.getString(nubmerColIndex) + ")");
 		        idList.add(c.getString(idColIndex));
 		    } while (c.moveToNext());
 		}
+		Collections.reverse(list);
+		Collections.reverse(idList);
 		adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, list);
 		listView.setAdapter(adapter);
