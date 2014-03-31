@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.text.style.ReplacementSpan;
 import android.widget.Toast;
 
 public class Util {

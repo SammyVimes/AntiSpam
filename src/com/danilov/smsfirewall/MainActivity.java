@@ -50,7 +50,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private MessagesAdapter adapter;
 	private MyReceiver receiver;
 	private MyDialog dialog;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

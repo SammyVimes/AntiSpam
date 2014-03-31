@@ -189,9 +189,15 @@ public class SettingsActivity extends SherlockFragmentActivity {
 		        .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
-						String filePath = MyAndroidLogger.PATH + MyAndroidLogger.fileName;
+						String filePath = MyAndroidLogger.getSdPath() + MyAndroidLogger.fileName;
 						File f = new File(filePath);
 						boolean fileExists = f.exists();
+						if (fileExists) {
+							f.delete();
+						}
+						filePath = MyAndroidLogger.getInternalPath() + MyAndroidLogger.fileName;
+						f = new File(filePath);
+						fileExists = f.exists();
 						if (fileExists) {
 							f.delete();
 						}

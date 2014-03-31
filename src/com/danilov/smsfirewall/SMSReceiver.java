@@ -3,8 +3,6 @@ package com.danilov.smsfirewall;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.danilov.logger.Logger;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;

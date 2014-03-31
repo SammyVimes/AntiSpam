@@ -1,7 +1,5 @@
 package com.danilov.smsfirewall;
 
-import com.danilov.smsfirewall.Dialog.DialogListener;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;

@@ -1,7 +1,6 @@
 package com.danilov.smsfirewall.adapter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.danilov.smsfirewall.Sms;
 import com.danilov.smsfirewall.R;
+import com.danilov.smsfirewall.Sms;
 
 public class SmsAdapter extends BaseAdapter{
 	private LayoutInflater inflater;

@@ -1,6 +1,7 @@
 package com.danilov.smsfirewall;
 
 import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
